@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Basic Rust/HelloWorld/target/debug/HelloWorld
 Basic Rust/HelloWorld/target/debug/HelloWorld.d
 Basic Rust/HelloWorld/target/debug/.fingerprint/HelloWorld-75b90d8cf2e7dafe/dep-bin-HelloWorld
@@ -93,3 +94,6 @@ Basic Rust/HelloWorld/target/rls/debug/incremental/HelloWorld-2ox86mqa1nus1/s-g5
 Basic Rust/HelloWorld/target/rls/debug/incremental/HelloWorld-2ox86mqa1nus1/s-g5ad75oys6-1obtyx2-1kgsjv8qyt2n6/dep-graph.bin
 Basic Rust/HelloWorld/target/rls/debug/incremental/HelloWorld-2ox86mqa1nus1/s-g5ad75oys6-1obtyx2-1kgsjv8qyt2n6/query-cache.bin
 Basic Rust/HelloWorld/target/rls/debug/incremental/HelloWorld-2ox86mqa1nus1/s-g5ad75oys6-1obtyx2-1kgsjv8qyt2n6/work-products.bin
+=======
+Calculator in C/main
+>>>>>>> 6e6ba54d5614caf07110c1d4e9e92601c687ae1b
