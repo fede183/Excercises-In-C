@@ -11,10 +11,10 @@ pub fn run() {
     println!("{0} likes {1}, {0} dislikes {2}", "Alejandro", "Magdalenas", "Churros");
 
     // Named Arguments
-    println!("{name} likes {firstFood}, {name} dislikes {secondFood}", 
+    println!("{name} likes {first_food}, {name} dislikes {second_Food}", 
     name = "Alejandro", 
-    firstFood = "Magdalenas", 
-    secondFood = "Churros");
+    first_food = "Magdalenas", 
+    second_Food = "Churros");
 
     // Placeholders traits
     println!("Binary: {:b}, Hex: {:x}, Octal: {:o}", 
