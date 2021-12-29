@@ -34,6 +34,35 @@ fn solve_math_formula(formula : &String) -> Result<f32, f32> {
         return Ok(number_formula);
     }
 
+    if formula.contains("(") {
+        let positions_of_open_brackets : Vec<_> = formula.match_indices("(").collect();
+        let positions_of_close_brackets : Vec<_> = formula.match_indices(")").collect();
+
+        let position_open = positions_of_open_brackets[0].0;
+        
+        for position in positions_of_close_brackets {
+            let position_close = position.0;
+            let sub_formula = &formula[position_open+1..position_close];
+            let sub_formula_open_brackets_count = sub_formula.matches("(").count();
+            let sub_formula_close_brackets_count = sub_formula.matches(")").count();
+
+            if sub_formula_open_brackets_count == sub_formula_close_brackets_count {
+                let solved_sub_formula = solve_math_formula(&String::from(sub_formula));
+                let solved_sub_formula = &solved_sub_formula.unwrap().to_string();
+                
+                let mut new_formula = formula.clone(); 
+                
+                new_formula.replace_range(position_open..position_close+1, solved_sub_formula);
+
+                return solve_math_formula(&new_formula);
+            } else {
+                return Err(0.0);
+            }
+        }
+
+    }
+
+
     let possible_operators = String::from("*/+-");
 
        
