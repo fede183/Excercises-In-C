@@ -14,23 +14,25 @@ using namespace sf;
 
 int figures[7][4] = {
     0, 2, 4, 6, //I
-    2, 4, 5, 7, //Z
-    3, 4, 5, 6, //S
-    2, 4, 6, 7, //L
-    3, 4, 5, 7, //T
-    4, 5, 6, 7, //O
-    3, 5, 6, 7, //J
+    1, 2, 3, 4, //Z
+    0, 2, 3, 5, //S
+    0, 2, 4, 5, //L
+    1, 2, 3, 5, //T
+    0, 1, 2, 3, //O
+    1, 3, 4, 5, //J
 };
 
-int figures_horizontal_size[7][2] = {
-    1, 4, //I
-    2, 3, //Z
-    2, 3, //S
-    2, 3, //L
-    2, 3, //T
-    2, 2, //O
-    2, 3, //J
-};
+const int square_sixe = 18; 
+const int horizontal_squares = 14;
+const int vertical_squares = 27;
+const int display_width = square_sixe*horizontal_squares; 
+const int display_heigth = square_sixe*vertical_squares; 
+
+
+bool board[horizontal_squares][vertical_squares];
+
+
+// <Position Functions>
 
 struct Point
 {
@@ -49,24 +51,26 @@ void move(int dx) {
         }
 }
 
-void descend(int dx) {
+void descend(int dy) {
     //|Move
     //V
-    for (int i = 0; i < 4; i++) {
-        position[i].y += dx;
-    }
+    if (dy != 0) 
+        for (int i = 0; i < 4; i++) {
+            position[i].y += dy;
+        }
 }
 
-bool has_colitions_border() {
-    bool has_colitions_border = false;
+bool has_colitions_border_or_remains() {
+    bool has_colitions_border_or_remains = false;
 
     for (int i = 0; i < 4; i++)
     {
-        has_colitions_border = has_colitions_border || 
-        !(0 <= position[i].x && position[i].x < 18);
+        has_colitions_border_or_remains = has_colitions_border_or_remains || 
+        !(0 <= position[i].x && position[i].x < horizontal_squares) 
+        || board[position[i].x][position[i].y];
     }
 
-    return has_colitions_border;
+    return has_colitions_border_or_remains;
 }
 
 bool has_colitions_top() {
@@ -75,7 +79,19 @@ bool has_colitions_top() {
     for (int i = 0; i < 4; i++)
     {
         has_colitions_top = has_colitions_top || 
-        !(0 <= position[i].y && position[i].y < 27);
+        !(0 <= position[i].y);
+    }
+
+    return has_colitions_top;
+}
+
+bool has_colitions_bottom_or_remains() {
+    bool has_colitions_top = false;
+
+    for (int i = 0; i < 4; i++)
+    {
+        has_colitions_top = has_colitions_top || 
+        !(position[i].y < vertical_squares) || board[position[i].x][position[i].y];
     }
 
     return has_colitions_top;
@@ -102,12 +118,7 @@ bool touching_zero_top() {
 
     return false;
 }
-
-const int display_width = 324; 
-const int display_heigth = 486; 
-const int square_sixe = 18; 
-
-
+// </Position Functions>
 
 int main()
 {
@@ -120,17 +131,17 @@ int main()
     
     sprite.setTextureRect(IntRect(0, 0, square_sixe, square_sixe));
 
-    int piece = 0, dx = 0, dx_count = 0, dy_count = 0;
+    int dx = 0, dy = 0, dx_count = 0, dy_count = 0;
     bool rotate = false;
+    bool new_piece = true;
 
-    // First Draw figure, one square at the time
-    if (position[0].x == 0)
-        for (int i = 0; i < 4; i++)
+    for (int i = 0; i < horizontal_squares; i++)
+    {
+        for (int j = 0; j < vertical_squares; j++)
         {
-            position[i].x = figures[piece][i] % 2;
-            position[i].y = figures[piece][i] / 2;
+            board[i][j] = false;
         }
-
+    }
 
     while (window.isOpen())
     {
@@ -147,10 +158,14 @@ int main()
                         break;
                     case Keyboard::Right:
                         dx = 1;
-                        dx_count += dx_count == 18 ? 0 : 1;
+                        dx_count += dx_count == horizontal_squares ? 0 : 1;
                         break;
                     case Keyboard::Up:
                         rotate = true;
+                        break;
+                    case Keyboard::Down:
+                        dy = 1;
+                        dy_count += dy_count == vertical_squares ? 0 : 1;
                         break;
                     default:
                         break;
@@ -159,15 +174,20 @@ int main()
 
         window.clear(Color::White);
 
+        // Generate new piece
+        if (new_piece) {
+            int piece = rand() % 7;
+
+            for (int i = 0; i < 4; i++)
+            {
+                position[i].x = figures[piece][i] % 2;
+                position[i].y = figures[piece][i] / 2;
+            }
+            new_piece = false;
+        }
+        
         Point old_position[4];
         copy(position, old_position);
-
-        move(dx);
-
-        // Check for border colitions
-        if (has_colitions_border()) 
-            copy(old_position, position);
-
 
         // Rotate
         if (rotate) {
@@ -181,12 +201,8 @@ int main()
             }
 
             if (dx_count == 0) {
-                while (has_colitions_border()) {
+                while (has_colitions_border_or_remains()) {
                     move(1);
-                }
-
-                while (has_colitions_top()) {
-                    descend(1);
                 }
 
                 while (!touching_zero_border()) {
@@ -195,21 +211,82 @@ int main()
             }  
 
             if (dy_count == 0) {
+                while (has_colitions_top()) {
+                    descend(1);
+                }
+
                 while (!touching_zero_top()) {
                     descend(-1);
                 }
             }        
         }
 
-        // Draw Figure
-        for (int i = 0; i < 4; i++)
+        move(dx);
+
+        if (has_colitions_border_or_remains()) 
+            copy(old_position, position);
+
+        descend(dy);
+
+        // If is not moving to the sides and there is colitions in botton or ramains
+        // Ask for new piece and save old one in board
+        if (dx == 0 && has_colitions_bottom_or_remains()) {
+            copy(old_position, position);
+            for (int i = 0; i < 4; i++)
+            {
+                board[position[i].x][position[i].y] = true; 
+            }
+            new_piece = true;
+        } else {
+            // Draw Figure
+            for (int i = 0; i < 4; i++)
+            {
+                sprite.setPosition(position[i].x*square_sixe, position[i].y*square_sixe);
+                window.draw(sprite);
+            }
+        }
+
+        // Check Board for complete lines
+        for (int j = vertical_squares - 1; j > -1; j--)
         {
-            sprite.setPosition(position[i].x*square_sixe, position[i].y*square_sixe);
-            window.draw(sprite);
+            bool row_has_empty_positions = false; 
+            for (int i = 0; i < horizontal_squares; i++)
+            {   
+                if (!board[i][j]) {
+                    row_has_empty_positions = true;
+                    break;
+                }
+            }
+
+            if (!row_has_empty_positions) {
+                for (int i = 0; i < horizontal_squares; i++)
+                {
+                    board[i][j] = false;
+                }
+            } 
+                
+        }
+
+        // Draw Board
+        for (int j = vertical_squares - 1; j > -1; j--)
+            {
+     
+                int row_empty_positions = 0; 
+                for (int i = 0; i < horizontal_squares; i++)
+                {
+                if (board[i][j]) {
+                    sprite.setPosition(i*square_sixe, j*square_sixe);
+                    window.draw(sprite);
+                } else {
+                    row_empty_positions++;
+                }
+            }
+            if (row_empty_positions == vertical_squares) 
+                break;
         }
         
 
-        dx = 0, rotate = false;
+        dx = 0, dy = 0, rotate = false;
         
 
         window.display();
