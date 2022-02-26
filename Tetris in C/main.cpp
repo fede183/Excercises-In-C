@@ -25,7 +25,7 @@ int figures[7][4] = {
     1, 3, 4, 5, //J
 };
 
-const int square_sixe = 18; 
+const int square_sixe = 10; 
 const int horizontal_squares = 10;
 const int vertical_squares = 27;
 const int display_width = square_sixe*horizontal_squares; 
@@ -92,7 +92,7 @@ bool touching_zero_top() {
     return false;
 }
 
-void draw_sprite(int x, int y, Sprite sprite) {
+void draw_sprite(int x, int y, Sprite &sprite) {
     sprite.setPosition(x*square_sixe, y*square_sixe);
 }
 // </Position Functions>
@@ -101,12 +101,20 @@ int main()
 {
     RenderWindow window(VideoMode(display_width, display_heigth), "Tetris!");
     
-    Texture texture;
-    texture.loadFromFile("images/tiles.png");
+    Texture texturePoint;
+    texturePoint.loadFromFile("images/tiles.png");
 
-    Sprite sprite(texture);
+    // Texture textureFrame;
+    // textureFrame.loadFromFile("images/frame.png");
+
+    // Texture textureBackground;
+    // textureBackground.loadFromFile("images/background.png");
+
+    Sprite sprite(texturePoint);
     
     sprite.setTextureRect(IntRect(0, 0, square_sixe, square_sixe));
+
+    //Sprite frame(textureFrame), background(textureBackground);
 
     int dx = 0, dy = 0, dx_count = 0, dy_count = 0;
     bool rotate = false;
@@ -258,7 +266,7 @@ int main()
 
         dx = 0, dy = 0, rotate = false;
         
-
+        //window.draw(frame);
         window.display();
     }
     
