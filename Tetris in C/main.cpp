@@ -2,6 +2,9 @@
 #include <time.h>
 #include <algorithm>
 #include <iterator>
+#include "point.h"
+#include "board.cpp"
+
 
 using namespace sf;
 
@@ -28,16 +31,11 @@ const int vertical_squares = 27;
 const int display_width = square_sixe*horizontal_squares; 
 const int display_heigth = square_sixe*vertical_squares; 
 
-
-bool board[horizontal_squares][vertical_squares];
-
+Board* board;
 
 // <Position Functions>
 
-struct Point
-{
-    int x, y;
-} position[4];
+Point position[4];
 
 void copy(Point (&point_to_copy)[4], Point (&copy)[4]) {
     std::copy(std::begin(point_to_copy), std::end(point_to_copy), std::begin(copy));
@@ -60,19 +58,6 @@ void descend(int dy) {
         }
 }
 
-bool has_colitions_border_or_remains() {
-    bool has_colitions_border_or_remains = false;
-
-    for (int i = 0; i < 4; i++)
-    {
-        has_colitions_border_or_remains = has_colitions_border_or_remains || 
-        !(0 <= position[i].x && position[i].x < horizontal_squares) 
-        || board[position[i].x][position[i].y];
-    }
-
-    return has_colitions_border_or_remains;
-}
-
 bool has_colitions_top() {
     bool has_colitions_top = false;
 
@@ -80,18 +65,6 @@ bool has_colitions_top() {
     {
         has_colitions_top = has_colitions_top || 
         !(0 <= position[i].y);
-    }
-
-    return has_colitions_top;
-}
-
-bool has_colitions_bottom_or_remains() {
-    bool has_colitions_top = false;
-
-    for (int i = 0; i < 4; i++)
-    {
-        has_colitions_top = has_colitions_top || 
-        !(position[i].y < vertical_squares) || board[position[i].x][position[i].y];
     }
 
     return has_colitions_top;
@@ -135,13 +108,7 @@ int main()
     bool rotate = false;
     bool new_piece = true;
 
-    for (int i = 0; i < horizontal_squares; i++)
-    {
-        for (int j = 0; j < vertical_squares; j++)
-        {
-            board[i][j] = false;
-        }
-    }
+    board = new Board(vertical_squares, horizontal_squares);
 
     while (window.isOpen())
     {
@@ -173,7 +140,7 @@ int main()
         
 
         window.clear(Color::White);
-
+        
         // Generate new piece
         if (new_piece) {
             int piece = rand() % 7;
@@ -201,7 +168,7 @@ int main()
             }
 
             if (dx_count == 0) {
-                while (has_colitions_border_or_remains()) {
+                while (board->has_colitions_border_or_remains(position)) {
                     move(1);
                 }
 
@@ -223,20 +190,19 @@ int main()
 
         move(dx);
 
-        if (has_colitions_border_or_remains()) 
+        if (board->has_colitions_border_or_remains(position)) 
             copy(old_position, position);
 
         descend(dy);
 
         // If is not moving to the sides and there is colitions in botton or ramains
         // Ask for new piece and save old one in board
-        if (dx == 0 && has_colitions_bottom_or_remains()) {
+        if (dx == 0 && board->has_colitions_bottom_or_remains(position)) {
             copy(old_position, position);
-            for (int i = 0; i < 4; i++)
-            {
-                board[position[i].x][position[i].y] = true; 
-            }
+            board->add_piece(position);
             new_piece = true;
+            // Check Board for complete lines
+            board->delete_complete_lines();
         } else {
             // Draw Figure
             for (int i = 0; i < 4; i++)
@@ -246,44 +212,25 @@ int main()
             }
         }
 
-        // Check Board for complete lines
-        for (int j = vertical_squares - 1; j > -1; j--)
-        {
-            bool row_has_empty_positions = false; 
-            for (int i = 0; i < horizontal_squares; i++)
-            {   
-                if (!board[i][j]) {
-                    row_has_empty_positions = true;
-                    break;
-                }
-            }
-
-            if (!row_has_empty_positions) {
-                for (int i = 0; i < horizontal_squares; i++)
-                {
-                    board[i][j] = false;
-                }
-            } 
-                
-        }
 
         // Draw Board
-        for (int j = vertical_squares - 1; j > -1; j--)
+        int** columns = board->get_columns();
+        int row_len = board->get_row_quantity();
+        for (int j = 0; j < row_len; j++)
+        {
+            int* column = columns[j];
+            int column_len = board->get_column_quantity(j);
+            for (int i = 0; i < column_len; i++)
             {
-     
-                int row_empty_positions = 0; 
-                for (int i = 0; i < horizontal_squares; i++)
-                {
-                if (board[i][j]) {
-                    sprite.setPosition(i*square_sixe, j*square_sixe);
-                    window.draw(sprite);
-                } else {
-                    row_empty_positions++;
-                }
+                int real_y = vertical_squares - 1 - j;
+                int position_x = column[i]*square_sixe;
+                int position_y = real_y*square_sixe;
+                sprite.setPosition(position_x, position_y);
+                window.draw(sprite);
             }
-            if (row_empty_positions == vertical_squares) 
-                break;
         }
+
+        delete columns;
         
 
         dx = 0, dy = 0, rotate = false;
