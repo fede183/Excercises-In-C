@@ -26,7 +26,7 @@ int figures[7][4] = {
 };
 
 const int square_sixe = 18; 
-const int horizontal_squares = 14;
+const int horizontal_squares = 10;
 const int vertical_squares = 27;
 const int display_width = square_sixe*horizontal_squares; 
 const int display_heigth = square_sixe*vertical_squares; 
@@ -91,6 +91,10 @@ bool touching_zero_top() {
 
     return false;
 }
+
+void draw_sprite(int x, int y, Sprite sprite) {
+    sprite.setPosition(x*square_sixe, y*square_sixe);
+}
 // </Position Functions>
 
 int main()
@@ -110,8 +114,15 @@ int main()
 
     board = new Board(vertical_squares, horizontal_squares);
 
+    float timer = 0, delay = 0.3;
+    Clock clock;
+
     while (window.isOpen())
     {
+        float time = clock.getElapsedTime().asSeconds();
+        clock.restart();
+        timer += time;
+
         Event event;
         while (window.pollEvent(event))
             if (event.type == Event::Closed)
@@ -151,6 +162,8 @@ int main()
                 position[i].y = figures[piece][i] / 2;
             }
             new_piece = false;
+            dx_count = 0;
+            dy_count = 0;
         }
         
         Point old_position[4];
@@ -195,6 +208,13 @@ int main()
 
         descend(dy);
 
+        // <--Tick-->
+        if (timer > delay) {
+            descend(1);
+            dy_count += 1;
+            timer = 0;
+        }
+
         // If is not moving to the sides and there is colitions in botton or ramains
         // Ask for new piece and save old one in board
         if (dx == 0 && board->has_colitions_bottom_or_remains(position)) {
@@ -207,31 +227,34 @@ int main()
             // Draw Figure
             for (int i = 0; i < 4; i++)
             {
-                sprite.setPosition(position[i].x*square_sixe, position[i].y*square_sixe);
+                draw_sprite(position[i].x, position[i].y, sprite);
                 window.draw(sprite);
             }
         }
 
-
-        // Draw Board
-        int** columns = board->get_columns();
-        int row_len = board->get_row_quantity();
-        for (int j = 0; j < row_len; j++)
-        {
-            int* column = columns[j];
-            int column_len = board->get_column_quantity(j);
-            for (int i = 0; i < column_len; i++)
+        if (board->get_row_quantity() <= vertical_squares) {
+            // Draw Board
+            int** columns = board->get_columns();
+            int row_len = board->get_row_quantity();
+            for (int j = 0; j < row_len; j++)
             {
-                int real_y = vertical_squares - 1 - j;
-                int position_x = column[i]*square_sixe;
-                int position_y = real_y*square_sixe;
-                sprite.setPosition(position_x, position_y);
-                window.draw(sprite);
+                int* column = columns[j];
+                int column_len = board->get_column_quantity(j);
+                for (int i = 0; i < column_len; i++)
+                {
+                    int real_y = vertical_squares - 1 - j;
+                    int position_x = column[i]*square_sixe;
+                    int position_y = real_y*square_sixe;
+                    draw_sprite(position_x, position_y, sprite);
+                    window.draw(sprite);
+                }
             }
-        }
 
-        delete columns;
-        
+            delete columns;
+        } else {
+
+        }
+    
 
         dx = 0, dy = 0, rotate = false;
         
