@@ -25,11 +25,15 @@ int figures[7][4] = {
     1, 3, 4, 5, //J
 };
 
-const int square_sixe = 10; 
+const int square_sixe = 25; 
 const int horizontal_squares = 10;
 const int vertical_squares = 27;
+const int invisible_squares = 3;
+const int header_squares = 10;
+const int complete_vertical_squares = vertical_squares + invisible_squares;
 const int display_width = square_sixe*horizontal_squares; 
-const int display_heigth = square_sixe*vertical_squares; 
+const int display_heigth = square_sixe*(vertical_squares + header_squares + invisible_squares);
+
 
 Board* board;
 
@@ -93,7 +97,9 @@ bool touching_zero_top() {
 }
 
 void draw_sprite(int x, int y, Sprite &sprite) {
-    sprite.setPosition(x*square_sixe, y*square_sixe);
+    if (invisible_squares <= y) {
+        sprite.setPosition(x*square_sixe, (y + header_squares)*square_sixe);
+    }
 }
 // </Position Functions>
 
@@ -104,29 +110,37 @@ int main()
     Texture texturePoint;
     texturePoint.loadFromFile("images/tiles.png");
 
-    // Texture textureFrame;
-    // textureFrame.loadFromFile("images/frame.png");
-
-    // Texture textureBackground;
-    // textureBackground.loadFromFile("images/background.png");
-
     Sprite sprite(texturePoint);
     
-    sprite.setTextureRect(IntRect(0, 0, square_sixe, square_sixe));
+    sprite.setTextureRect(IntRect(0, 0, 18, 18));
+    float scale = (float)square_sixe / 18;
+    sprite.setScale(scale, scale);
 
-    //Sprite frame(textureFrame), background(textureBackground);
+    Text textScore;
+
+    textScore.setCharacterSize(18);
+    textScore.setStyle(Text::Bold);
+    textScore.setPosition(20, 50);
+    
+    int score = 0;
 
     int dx = 0, dy = 0, dx_count = 0, dy_count = 0;
     bool rotate = false;
     bool new_piece = true;
 
-    board = new Board(vertical_squares, horizontal_squares);
+
+    board = new Board(complete_vertical_squares, horizontal_squares);
 
     float timer = 0, delay = 0.3;
     Clock clock;
 
     while (window.isOpen())
     {
+        window.clear(Color::White);
+                
+        //textScore.setString("Puntaje: " + std::to_string(score));
+        //window.draw(textScore);       
+
         float time = clock.getElapsedTime().asSeconds();
         clock.restart();
         timer += time;
@@ -151,14 +165,11 @@ int main()
                         break;
                     case Keyboard::Down:
                         dy = 1;
-                        dy_count += dy_count == vertical_squares ? 0 : 1;
+                        dy_count += dy_count == complete_vertical_squares ? 0 : 1;
                         break;
                     default:
                         break;
                 }
-        
-
-        window.clear(Color::White);
         
         // Generate new piece
         if (new_piece) {
@@ -230,7 +241,7 @@ int main()
             board->add_piece(position);
             new_piece = true;
             // Check Board for complete lines
-            board->delete_complete_lines();
+            score += board->delete_complete_lines();
         } else {
             // Draw Figure
             for (int i = 0; i < 4; i++)
@@ -250,9 +261,9 @@ int main()
                 int column_len = board->get_column_quantity(j);
                 for (int i = 0; i < column_len; i++)
                 {
-                    int real_y = vertical_squares - 1 - j;
-                    int position_x = column[i]*square_sixe;
-                    int position_y = real_y*square_sixe;
+                    int real_y = complete_vertical_squares - 1 - j;
+                    int position_x = column[i];
+                    int position_y = real_y;
                     draw_sprite(position_x, position_y, sprite);
                     window.draw(sprite);
                 }
@@ -260,13 +271,11 @@ int main()
 
             delete columns;
         } else {
-
+            window.close();
         }
-    
 
-        dx = 0, dy = 0, rotate = false;
+        dx = 0, dy = 0, rotate = false; 
         
-        //window.draw(frame);
         window.display();
     }
     

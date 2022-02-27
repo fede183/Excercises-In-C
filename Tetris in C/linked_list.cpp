@@ -93,7 +93,7 @@ public:
     T* get_all_values() {
         Node<T>* iterator = this->first;
         int size = this->size;
-
+        int the_size = sizeof(T) * size;
         T* values = (T*) malloc(sizeof(T) * size);
         int i = 0;
 

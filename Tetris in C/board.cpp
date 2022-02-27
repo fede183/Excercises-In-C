@@ -95,6 +95,19 @@ public:
 
         return has_colitions_top;
     }
+    bool has_colitions_bottom_and_top(Point (&piece)[4]) {
+        bool has_colitions_top = false;
+        int board_row_size = this->board_row_size;
+
+        for (int i = 0; i < 4; i++)
+        {
+            Point point = piece[i];
+            has_colitions_top = has_colitions_top || 
+            (board_row_size <= point.y || this->has_point(point));
+        }
+
+        return has_colitions_top;
+    }
     bool has_colitions_border_or_remains(Point (&piece)[4]) {
         bool has_colitions_border_or_remains = false;
 
@@ -108,19 +121,22 @@ public:
 
         return has_colitions_border_or_remains;
     }
-    void delete_complete_lines() {
+    int delete_complete_lines() {
   
         int size = this->board_rows->get_size();
         int board_row_size = this->board_row_size;
         LinkedList<int>* rows = this->board_rows->get_all_values();
 
+        int quantity_lines_delete = 0;
         for (int i = 0; i < size; i++)
         {
             if (rows[i].get_size() == board_column_size) {
                 this->board_rows->remove(i);
+                quantity_lines_delete++;
             }
         }
 
+        return quantity_lines_delete;
     }
     int get_row_quantity() {
         return this->board_rows->get_size();
