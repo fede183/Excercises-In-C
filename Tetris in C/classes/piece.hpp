@@ -11,7 +11,7 @@ public:
     Piece(Point positions[4]);
     ~Piece();
 
-    void copy(Piece* copy);
+    void copy(Piece*);
     Point get_center_point();
     Point get_point(int index);
     void set_point(int x, int y, int index);

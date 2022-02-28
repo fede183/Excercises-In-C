@@ -22,7 +22,10 @@ Piece::Piece(Point positions[4]) {
 Piece::~Piece() {}
 
 void Piece::copy(Piece* copy) {
-    //copy = new Piece(copy);
+    for (int i = 0; i < 4; i++)
+    {
+        copy->positions[i] = this->positions[i];
+    }
 }
 
 Point Piece::get_center_point() {

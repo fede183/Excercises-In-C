@@ -7,7 +7,8 @@ Game::Game() {
     // Declare Board
     this->board = new Board(Config::complete_vertical_squares, Config::horizontal_squares);
     this->piece = new Piece();
-    this->old_piece->copy(piece);
+    this->old_piece = new Piece();
+    this->piece->copy(this->old_piece);
 }
 Game::~Game() {
     delete board;
@@ -67,7 +68,8 @@ void Game::clean_for_cycle() {
         complete_lines -= 10;
         level += 1;
     } 
-    dx = 0, dy = 0;     
+    dx = 0, dy = 0;
+    this->piece->copy(this->old_piece);
 }
 int Game::get_score() {
     return score;
@@ -85,7 +87,7 @@ void Game::check_state() {
         this->score += Config::scores[complete_lines_quantity - 1];
         this->complete_lines += complete_lines_quantity;
         this->piece = new Piece();
-        this->old_piece->copy(piece);
+        this->piece->copy(this->old_piece);
         this->dx_count = 0;
         this->dy_count = 0;
     }
