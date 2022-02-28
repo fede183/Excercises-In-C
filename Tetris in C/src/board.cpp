@@ -34,8 +34,6 @@ public:
                 columns[i] = column;
             }
             
-            //delete rows;
-
             return columns;
         }
         
@@ -62,10 +60,10 @@ public:
         
         this->board_rows->get_value(real_y)->push(x);
     }
-    void add_piece(Point (&piece)[4]) {
+    void add_piece(Piece *piece) {
 
         for (int i = 0; i < 4; i++) {
-            this->add_point(piece[i]);
+            this->add_point(piece->get_point(i));
         }
 
     }
@@ -82,38 +80,38 @@ public:
 
         return this->board_rows->get_value(real_y)->has_value(x);
     }
-    bool has_colitions_bottom_or_remains(Point (&piece)[4]) {
+    bool has_colitions_bottom_or_remains(Piece *piece) {
         bool has_colitions_top = false;
 
         int board_row_size = this->board_row_size;
         for (int i = 0; i < 4; i++)
         {
-            Point point = piece[i];
+            Point point = piece->get_point(i);
             has_colitions_top = has_colitions_top || 
             !(point.y < board_row_size) || this->has_point(point);
         }
 
         return has_colitions_top;
     }
-    bool has_colitions_bottom_and_top(Point (&piece)[4]) {
+    bool has_colitions_bottom_and_top(Piece *piece) {
         bool has_colitions_top = false;
         int board_row_size = this->board_row_size;
 
         for (int i = 0; i < 4; i++)
         {
-            Point point = piece[i];
+            Point point = piece->get_point(i);
             has_colitions_top = has_colitions_top || 
             (board_row_size <= point.y || this->has_point(point));
         }
 
         return has_colitions_top;
     }
-    bool has_colitions_border_or_remains(Point (&piece)[4]) {
+    bool has_colitions_border_or_remains(Piece *piece) {
         bool has_colitions_border_or_remains = false;
 
         for (int i = 0; i < 4; i++)
         {
-            Point point = piece[i];
+            Point point = piece->get_point(i);
             has_colitions_border_or_remains = has_colitions_border_or_remains || 
             !(0 <= point.x && point.x < this->board_column_size) 
             || this->has_point(point);
@@ -128,12 +126,16 @@ public:
         LinkedList<int>* rows = this->board_rows->get_all_values();
 
         int quantity_lines_delete = 0;
-        for (int i = 0; i < size; i++)
+        int i = 0, j = 0;
+        while (i < size)
         {
             if (rows[i].get_size() == board_column_size) {
-                this->board_rows->remove(i);
+                this->board_rows->remove(i - j);
                 quantity_lines_delete++;
+                j++;
             }
+
+            i++;
         }
 
         return quantity_lines_delete;
