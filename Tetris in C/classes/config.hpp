@@ -1,6 +1,6 @@
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef CONFIG_HPP
+#define CONFIG_HPP
 namespace Config
 {
     const int square_sixe = 25; 
@@ -35,4 +35,4 @@ namespace Config
 
 
 };
-#endif // CONFIG_H
+#endif // CONFIG_HPP

@@ -1,17 +1,16 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #include <time.h>
 #include <algorithm>
 #include <iterator>
-#include "src/piece.cpp"
-#include "src/board.cpp"
-#include "src/config.h"
+
+#include "classes/config.hpp"
+#include "classes/piece.hpp"
+#include "src/game.cpp"
 
 using namespace sf;
 
-
-Board* board;
-
-Piece* piece;
 
 void draw_sprite(int x, int y, Sprite &sprite) {
     if (Config::invisible_squares <= y) {
@@ -21,6 +20,7 @@ void draw_sprite(int x, int y, Sprite &sprite) {
 
 int main()
 {
+    // Window, Textures, Sprites, Text, Music
     RenderWindow window(VideoMode(Config::display_width, Config::display_heigth), "Tetris!");
     
     Texture texturePoint;
@@ -46,22 +46,24 @@ int main()
     textScore.setStyle(Text::Bold);
     textScore.setFont(font);
     textScore.setFillColor(Color::Black);
-    
-    int score = 0, level = 0, complete_lines = 0;
-
-    int dx = 0, dy = 0, dx_count = 0, dy_count = 0;
-    bool rotate = false;
-    bool new_piece = true;
-
-
-    board = new Board(Config::complete_vertical_squares, Config::horizontal_squares);
 
     float timer = 0, delay = 0;
     Clock clock;
 
+    // Music music;
+
+    // if (!music.openFromFile("sounds/theme.mp3"))
+    //     throw("Error al cargar la música");
+    
+    // music.setLoop(true);
+    // music.play();
+
+    // Declare Game
+    Game* game = new Game();
+
     while (window.isOpen())
     {
-        delay = Config::delays_for_level[level];
+        delay = Config::delays_for_level[game->get_level()];
         float time = clock.getElapsedTime().asSeconds();
         clock.restart();
         timer += time;
@@ -74,19 +76,16 @@ int main()
                 switch (event.key.code)
                 {
                     case Keyboard::Left:
-                        dx = -1;
-                        dx_count -= dx_count == 0 ? 0 : 1;
+                        game->move_left();
                         break;
                     case Keyboard::Right:
-                        dx = 1;
-                        dx_count += dx_count == Config::horizontal_squares ? 0 : 1;
+                        game->move_right();
                         break;
                     case Keyboard::Up:
-                        rotate = true;
+                        game->rotate();
                         break;
                     case Keyboard::Down:
-                        dy = 1;
-                        dy_count += dy_count == Config::complete_vertical_squares ? 0 : 1;
+                        game->descend();
                         break;
                     default:
                         break;
@@ -96,89 +95,29 @@ int main()
                 
         window.draw(rectangle_header);
         
-        // Generate new piece
-        if (new_piece) {
-            piece = new Piece();
-            new_piece = false;
-            dx_count = 0;
-            dy_count = 0;
-        }
-        
-        Piece* old_piece;
-        piece->copy(old_piece);
-
-        // Rotate
-        if (rotate) {
-            Point center_point = piece->get_center_point();
-
-            for (int i = 0; i < 4; i++) {
-                int rotate_x = piece->get_point(i).y - center_point.y;
-                int rotate_y = piece->get_point(i).x - center_point.x;         
-                piece->set_point(center_point.x - rotate_x, center_point.y + rotate_y, i);
-            }
-
-            if (dx_count == 0) {
-                while (board->has_colitions_border_or_remains(piece)) {
-                    piece->move(1);
-                }
-
-                while (!piece->touching_zero_border()) {
-                    piece->move(-1);
-                }
-            }  
-
-            if (dy_count == 0) {
-                while (piece->has_colitions_top()) {
-                    piece->descend(1);
-                }
-
-                while (!piece->touching_zero_top()) {
-                    piece->descend(-1);
-                }
-            }        
-        }
-
-        piece->move(dx);
-
-        if (board->has_colitions_border_or_remains(piece)) 
-            old_piece->copy(piece);
-
-        piece->descend(dy);
-
         // <--Tick-->
         if (timer > delay) {
-            piece->descend(1);
-            dy_count += 1;
+            game->descend();
             timer = 0;
         }
 
-        // If is not moving to the sides and there is colitions in botton or ramains
-        // Ask for new piece and save old one in board
-        if (dx == 0 && board->has_colitions_bottom_or_remains(piece)) {
-            old_piece->copy(piece);
-            board->add_piece(piece);
-            new_piece = true;
-            // Check Board for complete lines
-            int complete_lines_quantity = board->delete_complete_lines();
-            score += Config::scores[complete_lines_quantity - 1];
-            complete_lines += complete_lines_quantity;
-        } else {
-            // Draw Figure
+        game->check_state();
+
+        if (!game->is_game_over()) {
+            // Draw Piece
+            Piece* piece = game->get_piece();
             for (int i = 0; i < 4; i++)
             {
                 draw_sprite(piece->get_point(i).x, piece->get_point(i).y, sprite);
                 window.draw(sprite);
             }
-        }
-
-        if (board->get_row_quantity() <= Config::vertical_squares) {
             // Draw Board
-            int** columns = board->get_columns();
-            int row_len = board->get_row_quantity();
+            int** columns = game->get_all_points_board();
+            int row_len = game->get_row_quantity();
             for (int j = 0; j < row_len; j++)
             {
                 int* column = columns[j];
-                int column_len = board->get_column_quantity(j);
+                int column_len = game->get_column_quantity(j);
                 for (int i = 0; i < column_len; i++)
                 {
                     int real_y = Config::complete_vertical_squares - 1 - j;
@@ -193,26 +132,22 @@ int main()
         } else {
             window.close();
         }
-        
 
-        if (complete_lines > 10 && level < 4) {
-            complete_lines -= 10;
-            level += 1;
-        } 
+        game->clean_for_cycle();
 
         textScore.setPosition(25, 30);
-        textScore.setString("Puntaje: " + std::to_string(score));
+        textScore.setString("Puntaje: " + std::to_string(game->get_score()));
         window.draw(textScore);
 
         textScore.setPosition(25, 60);
-        textScore.setString("Nivel: " + std::to_string(level));
+        textScore.setString("Nivel: " + std::to_string(game->get_level()));
         window.draw(textScore);
 
-        dx = 0, dy = 0, rotate = false; 
-        
+
         window.display();
     }
     
+    delete game;
 
     return 0;
 }
