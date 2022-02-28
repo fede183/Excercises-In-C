@@ -7,10 +7,11 @@ namespace Config
     const int horizontal_squares = 10;
     const int vertical_squares = 27;
     const int invisible_squares = 3;
-    const int header_squares = 10;
+    const int header_squares = 2;
     const int complete_vertical_squares = vertical_squares + invisible_squares;
     const int display_width = square_sixe*horizontal_squares; 
     const int display_heigth = square_sixe*(vertical_squares + header_squares + invisible_squares);
+    const int display_header = square_sixe*(header_squares + invisible_squares);
 
     const int scores[4] = {40, 100, 300, 1200};
     const float delays_for_level[4] = {0.48, 0.43, 0.38, 0.33};

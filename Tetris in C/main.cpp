@@ -31,15 +31,18 @@ int main()
     sprite.setTextureRect(IntRect(0, 0, 18, 18));
     float scale = (float)Config::square_sixe / 18;
     sprite.setScale(scale, scale);
+    
+    RectangleShape rectangle_header(Vector2f(Config::display_width, Config::display_header));
+    rectangle_header.setFillColor(Color(190, 180, 180));
 
     Text textScore;
     Font font;
 
-    if (!font.loadFromFile("fonts/arial.ttf"))
+    if (!font.loadFromFile("fonts/textFont.ttf"))
         throw("Error al cargar la fuente");
     
 
-    textScore.setCharacterSize(18);
+    textScore.setCharacterSize(24);
     textScore.setStyle(Text::Bold);
     textScore.setFont(font);
     textScore.setFillColor(Color::Black);
@@ -91,6 +94,8 @@ int main()
         
         window.clear(Color::White);
                 
+        window.draw(rectangle_header);
+        
         // Generate new piece
         if (new_piece) {
             piece = new Piece();
@@ -195,11 +200,11 @@ int main()
             level += 1;
         } 
 
-        textScore.setPosition(10, 0);
+        textScore.setPosition(25, 30);
         textScore.setString("Puntaje: " + std::to_string(score));
         window.draw(textScore);
 
-        textScore.setPosition(10, 24);
+        textScore.setPosition(25, 60);
         textScore.setString("Nivel: " + std::to_string(level));
         window.draw(textScore);
 
