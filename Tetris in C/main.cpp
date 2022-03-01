@@ -6,7 +6,7 @@
 #include <iterator>
 
 #include "classes/config.hpp"
-#include "classes/piece.hpp"
+#include "classes/point.hpp"
 #include "src/game.cpp"
 
 using namespace sf;
@@ -38,8 +38,8 @@ int main()
     Text textScore;
     Font font;
 
-    if (!font.loadFromFile("fonts/textFont.ttf"))
-        throw("Error al cargar la fuente");
+    //if (!font.loadFromFile("fonts/textFont.ttf"))
+    //    throw("Error al cargar la fuente");
     
 
     textScore.setCharacterSize(24);
@@ -91,7 +91,7 @@ int main()
                         break;
                 }
         
-        window.clear(Color::White);
+        window.clear(Color::Black);
                 
         window.draw(rectangle_header);
         
@@ -104,31 +104,17 @@ int main()
         game->check_state();
 
         if (!game->is_game_over()) {
-            // Draw Piece
-            Piece* piece = game->get_piece();
-            for (int i = 0; i < 4; i++)
+            // Draw Points
+            Point* points = game->get_all_points();
+            int point_quantity = game->get_point_quantity();
+
+            for (int i = 0; i < point_quantity; i++)
             {
-                draw_sprite(piece->get_point(i).x, piece->get_point(i).y, sprite);
+                draw_sprite(points[i].x, points[i].y, sprite);
                 window.draw(sprite);
             }
-            // Draw Board
-            int** columns = game->get_all_points_board();
-            int row_len = game->get_row_quantity();
-            for (int j = 0; j < row_len; j++)
-            {
-                int* column = columns[j];
-                int column_len = game->get_column_quantity(j);
-                for (int i = 0; i < column_len; i++)
-                {
-                    int real_y = Config::complete_vertical_squares - 1 - j;
-                    int position_x = column[i];
-                    int position_y = real_y;
-                    draw_sprite(position_x, position_y, sprite);
-                    window.draw(sprite);
-                }
-            }
 
-            delete columns;
+            delete points;
         } else {
             window.close();
         }

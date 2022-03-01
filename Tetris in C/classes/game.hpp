@@ -31,9 +31,7 @@ public:
 
     void check_state();
     
-    int get_row_quantity();
-    int get_column_quantity(int index);
-    int** get_all_points_board();
-    Piece* get_piece();
+    int get_point_quantity();
+    Point* get_all_points();
 };
 #endif // GAME_HPP

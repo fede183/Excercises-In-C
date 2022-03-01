@@ -93,15 +93,47 @@ void Game::check_state() {
     }
 }
 
-int Game::get_row_quantity() {
-    return this->board->get_row_quantity();
+int Game::get_point_quantity() {
+    int point_quantity = 0;
+    int row_len = this->board->get_row_quantity();
+    for (int j = 0; j < row_len; j++)
+    {
+        int column_len = this->board->get_column_quantity(j);
+        point_quantity += column_len;
+    }
+
+    return point_quantity + 4;
 }
-int Game::get_column_quantity(int index) {
-    return this->board->get_column_quantity(index);
-}
-int** Game::get_all_points_board() {
-    return this->board->get_columns();
-}
-Piece* Game::get_piece() {
-    return this->piece;
+
+Point* Game::get_all_points() {
+
+    int** columns = this->board->get_columns();
+    int row_len = this->board->get_row_quantity();
+    int point_quantity = this->get_point_quantity();
+    Point* points = (Point*) malloc(sizeof(Point) * point_quantity);
+
+    int point_index = 0;
+    for (int j = 0; j < row_len; j++)
+    {
+        int* column = columns[j];
+        int column_len = this->board->get_column_quantity(j);
+        for (int i = 0; i < column_len; i++)
+        {
+            int real_y = Config::complete_vertical_squares - 1 - j;
+            int position_x = column[i];
+            int position_y = real_y;
+            Point point;
+            point.x = position_x;
+            point.y = position_y;
+            points[point_index] = point;
+            point_index++;
+        }
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        points[i + point_index] = this->piece->get_point(i);
+    }
+
+    return points;
 }
