@@ -8,8 +8,10 @@ namespace Config
     const int vertical_squares = 27;
     const int invisible_squares = 3;
     const int header_squares = 2;
+    const int side_block_width = 8;
     const int complete_vertical_squares = vertical_squares + invisible_squares;
     const int display_width = square_sixe*horizontal_squares; 
+    const int display_side_block_width = square_sixe*side_block_width; 
     const int display_heigth = square_sixe*(vertical_squares + header_squares + invisible_squares);
     const int display_header = square_sixe*(header_squares + invisible_squares);
 

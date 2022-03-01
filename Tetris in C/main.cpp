@@ -21,7 +21,7 @@ void draw_sprite(int x, int y, Sprite &sprite) {
 int main()
 {
     // Window, Textures, Sprites, Text, Music
-    RenderWindow window(VideoMode(Config::display_width, Config::display_heigth), "Tetris!");
+    RenderWindow window(VideoMode(Config::display_width + Config::display_side_block_width, Config::display_heigth), "Tetris!");
     
     Texture texturePoint;
     texturePoint.loadFromFile("images/tiles.png");
@@ -32,8 +32,14 @@ int main()
     float scale = (float)Config::square_sixe / 18;
     sprite.setScale(scale, scale);
     
-    RectangleShape rectangle_header(Vector2f(Config::display_width, Config::display_header));
+    RectangleShape rectangle_header;
+    rectangle_header.setSize(Vector2f(Config::display_width, Config::display_header));
     rectangle_header.setFillColor(Color(190, 180, 180));
+
+    RectangleShape rectangle_side_block;
+    rectangle_side_block.setSize(Vector2f(Config::display_side_block_width, Config::display_header + Config::display_heigth));
+    rectangle_side_block.setFillColor(Color(190, 180, 180));
+    rectangle_side_block.setPosition(Config::display_width, 0);
 
     Text textScore;
     Font font;
@@ -94,6 +100,7 @@ int main()
         window.clear(Color::Black);
                 
         window.draw(rectangle_header);
+        window.draw(rectangle_side_block);
         
         // <--Tick-->
         if (timer > delay) {
