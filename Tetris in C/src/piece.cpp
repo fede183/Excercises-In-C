@@ -64,21 +64,3 @@ bool Piece::has_colitions_top() {
     }
     return has_colitions_top;
 }
-bool Piece::touching_zero_border() {
-    for (int i = 0; i < 4; i++)
-    {
-        if (this->positions[i].x == 0) {
-            return true;
-        }
-    }
-    return false;
-}
-bool Piece::touching_zero_top() {
-    for (int i = 0; i < 4; i++)
-    {
-        if (this->positions[i].y == 0) {
-            return true;
-        }
-    }
-    return false;
-}

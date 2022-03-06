@@ -16,20 +16,17 @@ Game::~Game() {
     delete piece;
 }
 void Game::move_left() {
-    dx_count -= dx_count == 0 ? 0 : 1;
     this->piece->move(-1);
     if (this->board->has_colitions_border_or_remains(this->piece)) 
         this->old_piece->copy(this->piece);
 }
 
 void Game::move_right() {
-    dx_count += dx_count == Config::horizontal_squares ? 0 : 1;
     this->piece->move(1);
     if (this->board->has_colitions_border_or_remains(this->piece)) 
         this->old_piece->copy(this->piece);
 }
 void Game::descend() {
-    this->dy_count += this->dy_count == Config::complete_vertical_squares ? 0 : 1;
     this->piece->descend(1);
 }
 
@@ -40,22 +37,15 @@ void Game::rotate() {
         int rotate_y = this->piece->get_point(i).x - center_point.x;         
         this->piece->set_point(center_point.x - rotate_x, center_point.y + rotate_y, i);
     }
-    if (this->dx_count == 0) {
-        while (this->board->has_colitions_border_or_remains(this->piece)) {
-            this->piece->move(1);
-        }
-        while (!this->piece->touching_zero_border()) {
-            this->piece->move(-1);
-        }
-    }  
-    if (this->dy_count == 0) {
-        while (this->piece->has_colitions_top()) {
-            this->piece->descend(1);
-        }
-        while (!this->piece->touching_zero_top()) {
-            this->piece->descend(-1);
-        }
-    }        
+
+    while (this->board->has_colitions_border_or_remains(this->piece)) {
+        this->piece->move(1);
+    }
+
+    while (this->piece->has_colitions_top()) {
+        this->piece->descend(1);
+    }
+
 }
 
 bool Game::is_game_over() {
@@ -88,10 +78,6 @@ void Game::check_state() {
         this->next_piece->copy(this->piece);
         this->next_piece = new Piece();
         this->piece->copy(this->old_piece);
-
-        // Clean position variables
-        this->dx_count = 0;
-        this->dy_count = 0;
     }
 }
 

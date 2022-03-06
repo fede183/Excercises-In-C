@@ -20,7 +20,5 @@ public:
     void descend(int dy);
     
     bool has_colitions_top();
-    bool touching_zero_border();
-    bool touching_zero_top();
 };
 #endif // PIECE_HPP
