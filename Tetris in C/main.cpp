@@ -49,8 +49,8 @@ int main()
     Text textScore;
     Font font;
 
-    //if (!font.loadFromFile("fonts/textFont.ttf"))
-    //    throw("Error al cargar la fuente");
+    if (!font.loadFromFile("fonts/textFont.ttf"))
+        throw("Error al cargar la fuente");
     
 
     textScore.setCharacterSize(24);
@@ -61,13 +61,13 @@ int main()
     float timer = 0, delay = 0;
     Clock clock;
 
-    // Music music;
+    Music music;
 
-    // if (!music.openFromFile("sounds/theme.mp3"))
-    //     throw("Error al cargar la música");
+    if (!music.openFromFile("sounds/theme.wav"))
+        throw("Error al cargar la música");
     
-    // music.setLoop(true);
-    // music.play();
+    music.setLoop(true);
+    music.play();
 
     // Declare Game
     Game* game = new Game();
