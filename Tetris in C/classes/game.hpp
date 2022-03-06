@@ -11,7 +11,7 @@ private:
     Piece* piece;
     Piece* old_piece;
     Piece* next_piece;
-    int dx = 0, dy = 0, dx_count = 0, dy_count = 0;
+    int dx_count = 0, dy_count = 0;
     int score = 0, level = 0, complete_lines = 0;
 
 public:

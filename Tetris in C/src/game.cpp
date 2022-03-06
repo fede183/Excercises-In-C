@@ -16,7 +16,6 @@ Game::~Game() {
     delete piece;
 }
 void Game::move_left() {
-    dx = -1;
     dx_count -= dx_count == 0 ? 0 : 1;
     this->piece->move(-1);
     if (this->board->has_colitions_border_or_remains(this->piece)) 
@@ -24,14 +23,12 @@ void Game::move_left() {
 }
 
 void Game::move_right() {
-    dx = 1;
     dx_count += dx_count == Config::horizontal_squares ? 0 : 1;
     this->piece->move(1);
     if (this->board->has_colitions_border_or_remains(this->piece)) 
         this->old_piece->copy(this->piece);
 }
 void Game::descend() {
-    this->dy = 1;
     this->dy_count += this->dy_count == Config::complete_vertical_squares ? 0 : 1;
     this->piece->descend(1);
 }
@@ -69,7 +66,6 @@ void Game::clean_for_cycle() {
         complete_lines -= 10;
         level += 1;
     } 
-    dx = 0, dy = 0;
     this->piece->copy(this->old_piece);
 }
 int Game::get_score() {
@@ -80,7 +76,7 @@ int Game::get_level() {
 }
 
 void Game::check_state() {
-    if (this->dx == 0 && this->board->has_colitions_bottom_or_remains(this->piece)) {
+    if (this->board->has_colitions_bottom_or_remains(this->piece)) {
         this->old_piece->copy(this->piece);
         this->board->add_piece(this->piece);
         // Check Board for complete lines
