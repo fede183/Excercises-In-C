@@ -10,6 +10,7 @@ private:
     Board* board;
     Piece* piece;
     Piece* old_piece;
+    Piece* next_piece;
     int dx = 0, dy = 0, dx_count = 0, dy_count = 0;
     int score = 0, level = 0, complete_lines = 0;
 
@@ -33,5 +34,6 @@ public:
     
     int get_point_quantity();
     Point* get_all_points();
+    Point* get_next_piece_points();
 };
 #endif // GAME_HPP

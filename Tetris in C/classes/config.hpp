@@ -14,6 +14,16 @@ namespace Config
     const int display_side_block_width = square_sixe*side_block_width; 
     const int display_heigth = square_sixe*(vertical_squares + header_squares + invisible_squares);
     const int display_header = square_sixe*(header_squares + invisible_squares);
+    
+
+    const int next_piece_block_width = 6;
+    const int next_piece_block_heigth = 7;
+    const int display_next_piece_block_width = square_sixe*next_piece_block_width; 
+    const int display_next_piece_block_heigth = square_sixe*next_piece_block_heigth; 
+    const int next_piece_block_position_x = horizontal_squares + 1;
+    const int next_piece_block_position_y = header_squares + invisible_squares + 3;
+    const int display_next_piece_block_position_x = square_sixe*next_piece_block_position_x;
+    const int display_next_piece_block_position_y = square_sixe*next_piece_block_position_y;
 
     const int scores[4] = {40, 100, 300, 1200};
     const float delays_for_level[4] = {0.48, 0.43, 0.38, 0.33};

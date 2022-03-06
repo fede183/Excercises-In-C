@@ -9,6 +9,7 @@ Game::Game() {
     this->piece = new Piece();
     this->old_piece = new Piece();
     this->piece->copy(this->old_piece);
+    this->next_piece = new Piece();
 }
 Game::~Game() {
     delete board;
@@ -86,8 +87,13 @@ void Game::check_state() {
         int complete_lines_quantity = this->board->delete_complete_lines();
         this->score += Config::scores[complete_lines_quantity - 1];
         this->complete_lines += complete_lines_quantity;
-        this->piece = new Piece();
+
+        // Get next piece
+        this->next_piece->copy(this->piece);
+        this->next_piece = new Piece();
         this->piece->copy(this->old_piece);
+
+        // Clean position variables
         this->dx_count = 0;
         this->dy_count = 0;
     }
@@ -103,6 +109,23 @@ int Game::get_point_quantity() {
     }
 
     return point_quantity + 4;
+}
+
+Point* Game::get_next_piece_points() {
+
+    Point* points = (Point*) malloc(sizeof(Point) * 4);
+
+    for (int i = 0; i < 4; i++)
+    {
+        Point point = this->next_piece->get_point(i);
+
+        point.x += Config::next_piece_block_position_x + 2;
+        point.y += Config::next_piece_block_position_y;
+
+        points[i] = point;
+    }
+
+    return points;
 }
 
 Point* Game::get_all_points() {

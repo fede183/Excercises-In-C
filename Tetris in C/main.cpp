@@ -41,6 +41,11 @@ int main()
     rectangle_side_block.setFillColor(Color(190, 180, 180));
     rectangle_side_block.setPosition(Config::display_width, 0);
 
+    RectangleShape rectangle_next_piece;
+    rectangle_next_piece.setSize(Vector2f(Config::display_next_piece_block_width, Config::display_next_piece_block_heigth));
+    rectangle_next_piece.setFillColor(Color::Black);
+    rectangle_next_piece.setPosition(Config::display_next_piece_block_position_x, Config::display_next_piece_block_position_y);
+
     Text textScore;
     Font font;
 
@@ -101,6 +106,7 @@ int main()
                 
         window.draw(rectangle_header);
         window.draw(rectangle_side_block);
+        window.draw(rectangle_next_piece);
         
         // <--Tick-->
         if (timer > delay) {
@@ -136,6 +142,14 @@ int main()
         textScore.setString("Nivel: " + std::to_string(game->get_level()));
         window.draw(textScore);
 
+        Point* points = game->get_next_piece_points();
+        for (int i = 0; i < 4; i++)
+        {
+            draw_sprite(points[i].x, points[i].y, sprite);
+            window.draw(sprite);
+        }
+
+        delete points;
 
         window.display();
     }
