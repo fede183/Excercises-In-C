@@ -3,9 +3,10 @@
 #include "../classes/config.hpp"
 #include "../classes/point.hpp"
 #include "../classes/piece.hpp"
+#include "random_number_generator.cpp"
 
 Piece::Piece() {
-    int piece = rand() % 7;
+    int piece = random_number_generator();
     for (int i = 0; i < 4; i++)
     {
         int figure_position = Config::figures[piece][i]; 

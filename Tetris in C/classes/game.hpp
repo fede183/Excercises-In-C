@@ -9,7 +9,7 @@ class Game
 private:
     Board* board;
     Piece* piece;
-    Piece* old_piece;
+    Piece* backout_piece;
     Piece* next_piece;
     int score = 0, level = 0, complete_lines = 0;
 
@@ -29,7 +29,7 @@ public:
     int get_score();
     int get_level();
 
-    void check_state();
+    bool check_state();
     
     int get_point_quantity();
     Point* get_all_points();

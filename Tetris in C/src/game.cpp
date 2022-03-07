@@ -7,8 +7,8 @@ Game::Game() {
     // Declare Board
     this->board = new Board(Config::complete_vertical_squares, Config::horizontal_squares);
     this->piece = new Piece();
-    this->old_piece = new Piece();
-    this->piece->copy(this->old_piece);
+    this->backout_piece = new Piece();
+    this->piece->copy(this->backout_piece);
     this->next_piece = new Piece();
 }
 Game::~Game() {
@@ -18,13 +18,13 @@ Game::~Game() {
 void Game::move_left() {
     this->piece->move(-1);
     if (this->board->has_colitions_border_or_remains(this->piece)) 
-        this->old_piece->copy(this->piece);
+        this->backout_piece->copy(this->piece);
 }
 
 void Game::move_right() {
     this->piece->move(1);
     if (this->board->has_colitions_border_or_remains(this->piece)) 
-        this->old_piece->copy(this->piece);
+        this->backout_piece->copy(this->piece);
 }
 void Game::descend() {
     this->piece->descend(1);
@@ -56,7 +56,7 @@ void Game::clean_for_cycle() {
         complete_lines -= 10;
         level += 1;
     } 
-    this->piece->copy(this->old_piece);
+    this->piece->copy(this->backout_piece);
 }
 int Game::get_score() {
     return score;
@@ -65,9 +65,10 @@ int Game::get_level() {
     return level;
 }
 
-void Game::check_state() {
-    if (this->board->has_colitions_bottom_or_remains(this->piece)) {
-        this->old_piece->copy(this->piece);
+bool Game::check_state() {
+    bool needs_new_piece = this->board->has_colitions_bottom_or_remains(this->piece); 
+    if (needs_new_piece) {
+        this->backout_piece->copy(this->piece);
         this->board->add_piece(this->piece);
         // Check Board for complete lines
         int complete_lines_quantity = this->board->delete_complete_lines();
@@ -77,8 +78,9 @@ void Game::check_state() {
         // Get next piece
         this->next_piece->copy(this->piece);
         this->next_piece = new Piece();
-        this->piece->copy(this->old_piece);
+        this->piece->copy(this->backout_piece);
     }
+    return needs_new_piece;
 }
 
 int Game::get_point_quantity() {

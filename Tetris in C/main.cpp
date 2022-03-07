@@ -9,10 +9,12 @@
 #include "classes/point.hpp"
 #include "src/game.cpp"
 
+#include "src/random_number_generator.cpp"
+
 using namespace sf;
 
 
-void draw_sprite(int x, int y, Sprite &sprite) {
+void draw_sprite(unsigned int x, unsigned int y, Sprite &sprite) {
     if (Config::invisible_squares <= y) {
         sprite.setPosition(x*Config::square_sixe, (y + Config::header_squares)*Config::square_sixe);
     }
@@ -27,8 +29,9 @@ int main()
     texturePoint.loadFromFile("images/tiles.png");
 
     Sprite sprite(texturePoint);
-    
-    sprite.setTextureRect(IntRect(0, 0, 18, 18));
+    unsigned int color_of_texture = random_number_generator();
+
+    sprite.setTextureRect(IntRect(18*color_of_texture, 0, 18, 18));
     float scale = (float)Config::square_sixe / 18;
     sprite.setScale(scale, scale);
     
@@ -49,8 +52,8 @@ int main()
     Text textScore;
     Font font;
 
-    if (!font.loadFromFile("fonts/textFont.ttf"))
-        throw("Error al cargar la fuente");
+    //if (!font.loadFromFile("fonts/textFont.ttf"))
+    //    throw("Error al cargar la fuente");
     
 
     textScore.setCharacterSize(24);
@@ -63,8 +66,8 @@ int main()
 
     Music music;
 
-    if (!music.openFromFile("sounds/theme.wav"))
-        throw("Error al cargar la música");
+    //if (!music.openFromFile("sounds/theme.wav"))
+    //    throw("Error al cargar la música");
     
     music.setLoop(true);
     music.play();
@@ -114,7 +117,13 @@ int main()
             timer = 0;
         }
 
-        game->check_state();
+        bool needs_new_piece = game->check_state();
+
+        if (needs_new_piece) {
+            color_of_texture = random_number_generator();
+
+            sprite.setTextureRect(IntRect(18*color_of_texture, 0, 18, 18));
+        }
 
         if (!game->is_game_over()) {
             // Draw Points
