@@ -15,7 +15,9 @@ namespace Config
     const unsigned int display_heigth = square_sixe*(vertical_squares + header_squares + invisible_squares);
     const unsigned int display_header = square_sixe*(header_squares + invisible_squares);
     
-
+    const unsigned int display_lost_message_width = 400; 
+    const unsigned int display_lost_message_heigth = 200;
+    
     const unsigned int next_piece_block_width = 6;
     const unsigned int next_piece_block_heigth = 7;
     const unsigned int display_next_piece_block_width = square_sixe*next_piece_block_width; 
