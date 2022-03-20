@@ -39,9 +39,17 @@ void Button::draw(RenderTarget& target, RenderStates states) const
     target.draw(button_text, states);
 }
 
-void Button::update(Event& event, RenderWindow& window) 
+void Button::update(Event& event) 
 {
-    if (event.type == Event::MouseButtonPressed) {
-        window.close();
+    auto xCoord = event.mouseButton.x;
+    auto yCoord = event.mouseButton.y;
+    Vector2f worldPos = Vector2f(xCoord, yCoord);
+
+    if (event.type == Event::MouseButtonPressed && this->rectagle.getGlobalBounds().contains(worldPos)) {
+        this->clickEventFunction();
     }
+}
+
+void Button::setClickEvent(function<void(void)> eventFunction) {
+    this->clickEventFunction = eventFunction;
 }

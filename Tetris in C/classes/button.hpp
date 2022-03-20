@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <functional>
 
 using namespace sf;
 using namespace std;
@@ -10,12 +11,14 @@ class Button : public Drawable
 private:
     RectangleShape rectagle;
     string text;
+    function<void(void)> clickEventFunction;
 public:
     Button(string text_string, Vector2f location, Vector2f size);
     ~Button();
     void setText(string text);
     void draw(RenderTarget& target, RenderStates states) const;
-    void update(Event& e, RenderWindow& window);
+    void update(Event& event);
+    void setClickEvent(function<void(void)> eventFunction);
 };
 
 #endif

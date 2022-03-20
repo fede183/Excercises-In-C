@@ -12,7 +12,6 @@
 
 Game_Loop::Game_Loop() {
     this->window = new RenderWindow(VideoMode(Config::display_width + Config::display_side_block_width, Config::display_heigth), "Tetris!");
-    this->lost_message = new RenderWindow(VideoMode(Config::display_lost_message_width, Config::display_lost_message_heigth), "Game Over!");
     this->game = new Game();
 }
 
@@ -23,6 +22,8 @@ Game_Loop::~Game_Loop() {
 }
 
 void Game_Loop::render_game_over_window() {
+    this->lost_message = new RenderWindow(VideoMode(Config::display_lost_message_width, Config::display_lost_message_heigth), "Game Over!");
+    
     Text text;
     Font font;
 
@@ -37,7 +38,24 @@ void Game_Loop::render_game_over_window() {
     text.setPosition(25, 30);
     text.setString("Game Over!");
 
-    Button accept_button("Aceptar", Vector2f(80, 50), Vector2f(80, 50));
+    Button accept_button("Aceptar", Vector2f(120, 80), Vector2f(120, 50));
+
+    function<void(void)> acceptClickEvent = [&]() {
+        this->lost_message->close();
+        delete this->game;
+        this->game = new Game();
+    };
+
+    accept_button.setClickEvent(acceptClickEvent);
+
+    Button cancel_button("Cancelar", Vector2f(260, 80), Vector2f(120, 50));
+
+    function<void(void)> cancelClickEvent = [&]() {
+        this->lost_message->close();
+        this->window->close();
+    };
+
+    cancel_button.setClickEvent(cancelClickEvent);
 
     while (this->lost_message->isOpen()) {
         Event event;
@@ -47,11 +65,13 @@ void Game_Loop::render_game_over_window() {
                 this->window->close();
             }
 
-            accept_button.update(event, *this->window);
+            accept_button.update(event);
+            cancel_button.update(event);
         }
         this->lost_message->clear(Color::Black);
         
         this->lost_message->draw(accept_button);
+        this->lost_message->draw(cancel_button);
         this->lost_message->draw(text);
         this->lost_message->display();
     }        
@@ -65,24 +85,8 @@ void draw_sprite(unsigned int x, unsigned int y, Sprite &sprite) {
     }
 }
 
-// function<void(RenderWindow&, RenderWindow&)> close_game(RenderWindow& window, RenderWindow& lost_message)
-// {
-
-    
-//     return (){    
-//         window.close();
-//         lost_message.close();};
-// }
-
-// function<void(RenderWindow&, RenderWindow&)> restart_game(RenderWindow& window, RenderWindow& lost_message)
-// {
-//     window.close();
-//     lost_message.close();
-// }
-
-
 void Game_Loop::start() {
-      Texture texturePoint;
+    Texture texturePoint;
     texturePoint.loadFromFile("images/tiles.png");
 
     Sprite sprite(texturePoint);
@@ -162,8 +166,6 @@ void Game_Loop::start() {
    
 
         this->window->clear(Color::Black);
-        
-        render_game_over_window();
 
         this->window->draw(rectangle_header);
         this->window->draw(rectangle_side_block);
@@ -196,9 +198,7 @@ void Game_Loop::start() {
 
             delete points;
         } else {
-
-  
-            
+            render_game_over_window();
         }
 
         this->game->clean_for_cycle();
