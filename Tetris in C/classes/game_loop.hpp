@@ -12,8 +12,6 @@ private:
     Game* game;
     RenderWindow* window;
     RenderWindow* lost_message;
-    int score = 0, level = 0, complete_lines = 0;
-
 public:
     Game_Loop();
     ~Game_Loop();

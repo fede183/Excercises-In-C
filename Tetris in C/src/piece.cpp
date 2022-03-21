@@ -6,16 +6,16 @@
 #include "random_number_generator.cpp"
 
 Piece::Piece() {
-    int piece = random_number_generator();
-    for (int i = 0; i < 4; i++)
+    unsigned int piece = random_number_generator();
+    for (unsigned int i = 0; i < 4; i++)
     {
-        int figure_position = Config::figures[piece][i]; 
+        unsigned int figure_position = Config::figures[piece][i]; 
         this->positions[i].x = figure_position % 2;
         this->positions[i].y = figure_position / 2;
     }
 }
 Piece::Piece(Point positions[4]) {
-    for (int i = 0; i < 4; i++)
+    for (unsigned int i = 0; i < 4; i++)
     {
         this->positions[i] = positions[i];
     }
@@ -23,7 +23,7 @@ Piece::Piece(Point positions[4]) {
 Piece::~Piece() {}
 
 void Piece::copy(Piece* copy) {
-    for (int i = 0; i < 4; i++)
+    for (unsigned int i = 0; i < 4; i++)
     {
         copy->positions[i] = this->positions[i];
     }
@@ -32,33 +32,33 @@ void Piece::copy(Piece* copy) {
 Point Piece::get_center_point() {
     return this->positions[1];
 }
-Point Piece::get_point(int index) {
+Point Piece::get_point(const unsigned int index) {
     return this->positions[index];
 }
-void Piece::set_point(int x, int y, int index) {
+void Piece::set_point(const unsigned int x, const unsigned int y, const unsigned int index) {
     this->positions[index].x = x;
     this->positions[index].y = y;
 }
 
-void Piece::move(int dx) {
+void Piece::move(const unsigned int dx) {
     //<-Move->
     if (dx != 0) 
-        for (int i = 0; i < 4; i++) {
+        for (unsigned int i = 0; i < 4; i++) {
             this->positions[i].x += dx;
         }
 }
-void Piece::descend(int dy) {
+void Piece::descend(const unsigned int dy) {
     //|Move
     //V
     if (dy != 0) 
-        for (int i = 0; i < 4; i++) {
+        for (unsigned int i = 0; i < 4; i++) {
             this->positions[i].y += dy;
         }
 }
 
 bool Piece::has_colitions_top() {
     bool has_colitions_top = false;
-    for (int i = 0; i < 4; i++)
+    for (unsigned int i = 0; i < 4; i++)
     {
         has_colitions_top = has_colitions_top || 
         !(0 <= this->positions[i].y);

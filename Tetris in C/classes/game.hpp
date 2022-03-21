@@ -11,7 +11,7 @@ private:
     Piece* piece;
     Piece* backout_piece;
     Piece* next_piece;
-    int score = 0, level = 0, complete_lines = 0;
+    unsigned int score = 0, level = 0, complete_lines = 0;
 
 public:
     Game();
@@ -26,12 +26,12 @@ public:
 
     void clean_for_cycle();
 
-    int get_score();
-    int get_level();
+    unsigned int get_score();
+    unsigned int get_level();
 
     bool check_state();
     
-    int get_point_quantity();
+    unsigned int get_point_quantity();
     Point* get_all_points();
     Point* get_next_piece_points();
 };

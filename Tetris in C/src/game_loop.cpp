@@ -79,7 +79,7 @@ void Game_Loop::render_game_over_window() {
 
 using namespace std;
 
-void draw_sprite(unsigned int x, unsigned int y, Sprite &sprite) {
+void draw_sprite(const unsigned int x, const unsigned int y, Sprite &sprite) {
     if (Config::invisible_squares <= y) {
         sprite.setPosition(x*Config::square_sixe, (y + Config::header_squares)*Config::square_sixe);
     }
@@ -190,7 +190,7 @@ void Game_Loop::start() {
             Point* points = this->game->get_all_points();
             int point_quantity = this->game->get_point_quantity();
 
-            for (int i = 0; i < point_quantity; i++)
+            for (unsigned int i = 0; i < point_quantity; i++)
             {
                 draw_sprite(points[i].x, points[i].y, sprite);
                 this->window->draw(sprite);
@@ -212,7 +212,7 @@ void Game_Loop::start() {
         this->window->draw(textScore);
 
         Point* points = this->game->get_next_piece_points();
-        for (int i = 0; i < 4; i++)
+        for (unsigned int i = 0; i < 4; i++)
         {
             draw_sprite(points[i].x, points[i].y, sprite);
             this->window->draw(sprite);

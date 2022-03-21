@@ -13,9 +13,9 @@ private:
     string text;
     function<void(void)> clickEventFunction;
 public:
-    Button(string text_string, Vector2f location, Vector2f size);
+    Button(const string text_string, const Vector2f location, const Vector2f size);
     ~Button();
-    void setText(string text);
+    void setText(const string text);
     void draw(RenderTarget& target, RenderStates states) const;
     void update(Event& event);
     void setClickEvent(function<void(void)> eventFunction);

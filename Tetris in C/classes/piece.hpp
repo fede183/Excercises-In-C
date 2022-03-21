@@ -13,11 +13,11 @@ public:
 
     void copy(Piece*);
     Point get_center_point();
-    Point get_point(int index);
-    void set_point(int x, int y, int index);
+    Point get_point(const unsigned int index);
+    void set_point(const unsigned int x, const unsigned int y, const unsigned int index);
 
-    void move(int dx);
-    void descend(int dy);
+    void move(const unsigned int dx);
+    void descend(const unsigned int dy);
     
     bool has_colitions_top();
 };

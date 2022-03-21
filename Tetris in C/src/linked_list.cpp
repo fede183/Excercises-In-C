@@ -17,7 +17,7 @@ Linked_List<T>::~Linked_List() {
 }
 
 template<class T>
-int Linked_List<T>::get_size() {
+unsigned int Linked_List<T>::get_size() {
     return this->size;
 }
 
@@ -40,7 +40,7 @@ void Linked_List<T>::push(T data) {
 
 template<class T>
 void Linked_List<T>::remove(int index) {
-    int size = this->size;
+    unsigned int size = this->size;
     Node<T>* node_to_delete;
     if (index == 0) {
         node_to_delete = this->first;
@@ -78,7 +78,7 @@ T* Linked_List<T>::get_value(int index) {
         return &(this->last->data);
     } else {
         Node<T>* iterator = this->first;
-        for (int i = 0; i < index; i++)
+        for (unsigned int i = 0; i < index; i++)
         {
             iterator = iterator->next;
         }
@@ -89,9 +89,9 @@ T* Linked_List<T>::get_value(int index) {
 template<class T>
 T* Linked_List<T>::get_all_values() {
     Node<T>* iterator = this->first;
-    int size = this->size;
+    unsigned int size = this->size;
     T* values = (T*) malloc(sizeof(T) * size);
-    int i = 0;
+    unsigned int i = 0;
     while (iterator != NULL) {
         values[i] = iterator->data;
         i++;

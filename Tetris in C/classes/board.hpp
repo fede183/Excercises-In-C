@@ -8,14 +8,14 @@
 class Board
 {
 private:
-    Linked_List<Linked_List<int>>* board_rows;
-    int board_row_size;
-    int board_column_size;
+    Linked_List<Linked_List<unsigned int>>* board_rows;
+    unsigned int board_row_size;
+    unsigned int board_column_size;
 public:
-    Board(int board_row_size, int board_column_size);
+    Board(const unsigned int board_row_size, const unsigned int board_column_size);
     ~Board();
 
-    int** get_columns();
+    unsigned int** get_columns();
 
     void add_point(Point point);
     void add_piece(Piece* piece);
@@ -25,8 +25,8 @@ public:
     bool has_colitions_bottom_and_top(Piece* piece);
     bool has_colitions_border_or_remains(Piece* piece);
 
-    int delete_complete_lines();
-    int get_row_quantity();
-    int get_column_quantity(int index);
+    unsigned int delete_complete_lines();
+    unsigned int get_row_quantity();
+    unsigned int get_column_quantity(const unsigned int index);
 };
 #endif // BOARD_HPP

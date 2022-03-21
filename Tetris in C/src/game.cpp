@@ -11,10 +11,12 @@ Game::Game() {
     this->piece->copy(this->backout_piece);
     this->next_piece = new Piece();
 }
+
 Game::~Game() {
     delete board;
     delete piece;
 }
+
 void Game::move_left() {
     this->piece->move(-1);
     if (this->board->has_colitions_border_or_remains(this->piece)) 
@@ -33,8 +35,8 @@ void Game::descend() {
 void Game::rotate() {
     Point center_point = this->piece->get_center_point();
     for (int i = 0; i < 4; i++) {
-        int rotate_x = this->piece->get_point(i).y - center_point.y;
-        int rotate_y = this->piece->get_point(i).x - center_point.x;         
+        unsigned int rotate_x = this->piece->get_point(i).y - center_point.y;
+        unsigned int rotate_y = this->piece->get_point(i).x - center_point.x;         
         this->piece->set_point(center_point.x - rotate_x, center_point.y + rotate_y, i);
     }
 
@@ -51,6 +53,7 @@ void Game::rotate() {
 bool Game::is_game_over() {
     return this->board->get_row_quantity() > Config::vertical_squares;
 }
+
 void Game::clean_for_cycle() {
     if (complete_lines > 10 && level < 4) {
         complete_lines -= 10;
@@ -58,10 +61,11 @@ void Game::clean_for_cycle() {
     } 
     this->piece->copy(this->backout_piece);
 }
-int Game::get_score() {
+
+unsigned int Game::get_score() {
     return score;
 }
-int Game::get_level() {
+unsigned int Game::get_level() {
     return level;
 }
 
@@ -83,12 +87,12 @@ bool Game::check_state() {
     return needs_new_piece;
 }
 
-int Game::get_point_quantity() {
-    int point_quantity = 0;
-    int row_len = this->board->get_row_quantity();
-    for (int j = 0; j < row_len; j++)
+unsigned int Game::get_point_quantity() {
+    unsigned int point_quantity = 0;
+    unsigned int row_len = this->board->get_row_quantity();
+    for (unsigned int j = 0; j < row_len; j++)
     {
-        int column_len = this->board->get_column_quantity(j);
+        unsigned int column_len = this->board->get_column_quantity(j);
         point_quantity += column_len;
     }
 
@@ -99,7 +103,7 @@ Point* Game::get_next_piece_points() {
 
     Point* points = (Point*) malloc(sizeof(Point) * 4);
 
-    for (int i = 0; i < 4; i++)
+    for (unsigned int i = 0; i < 4; i++)
     {
         Point point = this->next_piece->get_point(i);
 
@@ -114,21 +118,21 @@ Point* Game::get_next_piece_points() {
 
 Point* Game::get_all_points() {
 
-    int** columns = this->board->get_columns();
-    int row_len = this->board->get_row_quantity();
-    int point_quantity = this->get_point_quantity();
+    unsigned int** columns = this->board->get_columns();
+    unsigned int row_len = this->board->get_row_quantity();
+    unsigned int point_quantity = this->get_point_quantity();
     Point* points = (Point*) malloc(sizeof(Point) * point_quantity);
 
-    int point_index = 0;
-    for (int j = 0; j < row_len; j++)
+    unsigned int point_index = 0;
+    for (unsigned int j = 0; j < row_len; j++)
     {
-        int* column = columns[j];
-        int column_len = this->board->get_column_quantity(j);
-        for (int i = 0; i < column_len; i++)
+        unsigned int* column = columns[j];
+        unsigned int column_len = this->board->get_column_quantity(j);
+        for (unsigned int i = 0; i < column_len; i++)
         {
-            int real_y = Config::complete_vertical_squares - 1 - j;
-            int position_x = column[i];
-            int position_y = real_y;
+            unsigned int real_y = Config::complete_vertical_squares - 1 - j;
+            unsigned int position_x = column[i];
+            unsigned int position_y = real_y;
             Point point;
             point.x = position_x;
             point.y = position_y;
@@ -137,7 +141,7 @@ Point* Game::get_all_points() {
         }
     }
 
-    for (int i = 0; i < 4; i++)
+    for (unsigned int i = 0; i < 4; i++)
     {
         points[i + point_index] = this->piece->get_point(i);
     }

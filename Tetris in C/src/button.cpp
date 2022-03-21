@@ -1,7 +1,7 @@
 #include "../classes/button.hpp"
 
 
-Button::Button(string text_string, Vector2f location, Vector2f size) {    
+Button::Button(const string text_string, const Vector2f location, const Vector2f size) {    
     RectangleShape rectagle;
 
     rectagle.setSize(size);
@@ -14,7 +14,7 @@ Button::Button(string text_string, Vector2f location, Vector2f size) {
 
 Button::~Button() {}
 
-void Button::setText(string text_string) {
+void Button::setText(const string text_string) {
     this->text = text_string;
 }
 

@@ -4,7 +4,7 @@
 
 #ifndef RANDOM_HPP
 #define RANDOM_HPP
-int random_number_generator() {
+unsigned int random_number_generator() {
   srand((unsigned) time(0));
 
   return rand() % 7;
