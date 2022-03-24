@@ -3,15 +3,20 @@
 #include "../classes/config.hpp"
 #include "../classes/point.hpp"
 #include "../classes/piece.hpp"
+#include "../classes/color.hpp"
 #include "random_number_generator.cpp"
 
 Piece::Piece() {
     unsigned int piece = random_number_generator();
+    unsigned int colorInt = random_number_generator();
+    color theColor = static_cast<color>(colorInt);
+
     for (unsigned int i = 0; i < 4; i++)
     {
         unsigned int figure_position = Config::figures[piece][i]; 
         this->positions[i].x = figure_position % 2;
         this->positions[i].y = figure_position / 2;
+        this->positions[i].point_color = theColor;
     }
 }
 Piece::Piece(Point positions[4]) {

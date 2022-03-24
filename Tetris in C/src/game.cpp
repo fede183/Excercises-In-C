@@ -118,7 +118,7 @@ Point* Game::get_next_piece_points() {
 
 Point* Game::get_all_points() {
 
-    unsigned int** columns = this->board->get_columns();
+    PointForBoard** columns = this->board->get_columns();
     unsigned int row_len = this->board->get_row_quantity();
     unsigned int point_quantity = this->get_point_quantity();
     Point* points = (Point*) malloc(sizeof(Point) * point_quantity);
@@ -126,20 +126,29 @@ Point* Game::get_all_points() {
     unsigned int point_index = 0;
     for (unsigned int j = 0; j < row_len; j++)
     {
-        unsigned int* column = columns[j];
+        PointForBoard* column = columns[j];
         unsigned int column_len = this->board->get_column_quantity(j);
         for (unsigned int i = 0; i < column_len; i++)
         {
             unsigned int real_y = Config::complete_vertical_squares - 1 - j;
-            unsigned int position_x = column[i];
+            unsigned int position_x = column[i].x;
             unsigned int position_y = real_y;
+            color point_color = column[i].point_color;
+
             Point point;
             point.x = position_x;
             point.y = position_y;
+            point.point_color = point_color;
+            
             points[point_index] = point;
+
             point_index++;
         }
+
+        delete column;
     }
+
+    delete columns;
 
     for (unsigned int i = 0; i < 4; i++)
     {

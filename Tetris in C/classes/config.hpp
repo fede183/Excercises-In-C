@@ -3,7 +3,7 @@
 #define CONFIG_HPP
 namespace Config
 {
-    const unsigned int square_sixe = 25; 
+    const unsigned int square_sixe = 20; 
     const unsigned int horizontal_squares = 10;
     const unsigned int vertical_squares = 27;
     const unsigned int invisible_squares = 3;

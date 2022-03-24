@@ -27,8 +27,8 @@ void Game_Loop::render_game_over_window() {
     Text text;
     Font font;
 
-    //if (!font.loadFromFile("fonts/textFont.ttf"))
-    //    throw("Error al cargar la fuente");
+    if (!font.loadFromFile("../fonts/textFont.ttf"))
+        throw("Error al cargar la fuente");
     
 
     text.setCharacterSize(24);
@@ -79,20 +79,22 @@ void Game_Loop::render_game_over_window() {
 
 using namespace std;
 
-void draw_sprite(const unsigned int x, const unsigned int y, Sprite &sprite) {
+void draw_sprite(const unsigned int x, const unsigned int y, color point_color, Sprite& sprite) {
     if (Config::invisible_squares <= y) {
+        sprite.setTextureRect(IntRect(18*point_color, 0, 18, 18));
         sprite.setPosition(x*Config::square_sixe, (y + Config::header_squares)*Config::square_sixe);
     }
 }
 
 void Game_Loop::start() {
     Texture texturePoint;
-    texturePoint.loadFromFile("images/tiles.png");
+
+    if (!texturePoint.loadFromFile("../images/tiles.png"))
+        throw("Error al cargar la textura");
+    
 
     Sprite sprite(texturePoint);
-    unsigned int color_of_texture = random_number_generator();
 
-    sprite.setTextureRect(IntRect(18*color_of_texture, 0, 18, 18));
     float scale = (float)Config::square_sixe / 18;
     sprite.setScale(scale, scale);
     
@@ -113,8 +115,8 @@ void Game_Loop::start() {
     Text textScore;
     Font font;
 
-    //if (!font.loadFromFile("fonts/textFont.ttf"))
-    //    throw("Error al cargar la fuente");
+    if (!font.loadFromFile("../fonts/textFont.ttf"))
+        throw("Error al cargar la fuente");
     
 
     textScore.setCharacterSize(24);
@@ -179,12 +181,6 @@ void Game_Loop::start() {
 
         bool needs_new_piece = this->game->check_state();
 
-        if (needs_new_piece) {
-            color_of_texture = random_number_generator();
-
-            sprite.setTextureRect(IntRect(18*color_of_texture, 0, 18, 18));
-        }
-
         if (!this->game->is_game_over()) {
             // Draw Points
             Point* points = this->game->get_all_points();
@@ -192,7 +188,7 @@ void Game_Loop::start() {
 
             for (unsigned int i = 0; i < point_quantity; i++)
             {
-                draw_sprite(points[i].x, points[i].y, sprite);
+                draw_sprite(points[i].x, points[i].y, points[i].point_color, sprite);
                 this->window->draw(sprite);
             }
 
@@ -214,7 +210,7 @@ void Game_Loop::start() {
         Point* points = this->game->get_next_piece_points();
         for (unsigned int i = 0; i < 4; i++)
         {
-            draw_sprite(points[i].x, points[i].y, sprite);
+            draw_sprite(points[i].x, points[i].y, points[i].point_color, sprite);
             this->window->draw(sprite);
         }
 

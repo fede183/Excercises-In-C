@@ -6,8 +6,13 @@
 #include "linked_list.cpp"
 #include "piece.cpp"
 
+bool operator==(const PointForBoard& point1, const PointForBoard& point2)
+{
+    return point1.x == point2.x;
+}
+
 Board::Board(const unsigned int board_row_size, const unsigned int board_column_size) {
-    this->board_rows = new Linked_List<Linked_List<unsigned int>>();
+    this->board_rows = new Linked_List<Linked_List<PointForBoard>>();
     this->board_row_size = board_row_size;
     this->board_column_size = board_column_size;
 }
@@ -15,14 +20,14 @@ Board::~Board() {
     delete board_rows;
 }
 
-unsigned int** Board::get_columns()
+PointForBoard** Board::get_columns()
 {
     unsigned int size = this->board_rows->get_size();
     if (size > 0) {
-        unsigned int** columns = (unsigned int**) malloc(sizeof(unsigned int*) * size);
-        Linked_List<unsigned int>* rows = (Linked_List<unsigned int>*) this->board_rows->get_all_values();
+        PointForBoard** columns = (PointForBoard**) malloc(sizeof(PointForBoard*) * size);
+        Linked_List<PointForBoard>* rows = (Linked_List<PointForBoard>*) this->board_rows->get_all_values();
         for (unsigned int i = 0; i < size; i++) {
-            unsigned int* column = rows[i].get_all_values();
+            PointForBoard* column = rows[i].get_all_values();
             columns[i] = column;
         }
         
@@ -42,13 +47,17 @@ void Board::add_point(Point point) {
         unsigned int iterator_size = 1 + real_y - size;
         while (iterator_size > 0) {
             iterator_size--;
-            Linked_List<unsigned int>* new_row = new Linked_List<unsigned int>();
+            Linked_List<PointForBoard>* new_row = new Linked_List<PointForBoard>();
 
             this->board_rows->push(*new_row);
         }
     } 
+
+    PointForBoard pointForBoard;
+    pointForBoard.x = x;
+    pointForBoard.point_color = point.point_color; 
     
-    this->board_rows->get_value(real_y)->push(x);
+    this->board_rows->get_value(real_y)->push(pointForBoard);
 }
 
 void Board::add_piece(Piece* piece) {
@@ -66,8 +75,11 @@ bool Board::has_point(Point point) {
     if (real_y >= size) {
         return false;
     }
+
+    PointForBoard pointForBoard;
+    pointForBoard.x = x;
    
-    return this->board_rows->get_value(real_y)->has_value(x);
+    return this->board_rows->get_value(real_y)->has_value(pointForBoard);
 }
 
 bool Board::has_colitions_bottom_or_remains(Piece* piece) {
@@ -111,7 +123,7 @@ bool Board::has_colitions_border_or_remains(Piece* piece) {
 
 unsigned int Board::delete_complete_lines() {
     unsigned int size = this->board_rows->get_size();
-    Linked_List<unsigned int>* rows = this->board_rows->get_all_values();
+    Linked_List<PointForBoard>* rows = this->board_rows->get_all_values();
     unsigned int quantity_lines_delete = 0;
     unsigned int i = 0, j = 0;
     while (i < size)
