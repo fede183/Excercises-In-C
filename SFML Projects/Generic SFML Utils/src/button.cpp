@@ -1,7 +1,7 @@
 #include "../classes/button.hpp"
 
 
-Button::Button(const string text_string, const Vector2f location, const Vector2f size) {    
+Button::Button(const string text_string, const Vector2f location, const Vector2f size, Font font) {    
     RectangleShape rectagle;
 
     rectagle.setSize(size);
@@ -10,6 +10,8 @@ Button::Button(const string text_string, const Vector2f location, const Vector2f
     this->rectagle = rectagle;
 
     this->text = text_string;
+
+    this->font = font;
 }
 
 Button::~Button() {}
@@ -23,12 +25,7 @@ void Button::draw(RenderTarget& target, RenderStates states) const
     target.draw(this->rectagle, states);
 
     Text button_text;
-    Font font;
-
-    if (!font.loadFromFile("../fonts/textFont.ttf"))
-        throw("Error al cargar la fuente");
     
-
     button_text.setCharacterSize(24);
     button_text.setStyle(Text::Bold);
     button_text.setFont(font);

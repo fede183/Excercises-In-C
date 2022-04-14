@@ -37,7 +37,7 @@ void Game_Loop::render_game_over_window() {
     text.setPosition(25, 30);
     text.setString("Game Over!");
 
-    Button accept_button("Aceptar", Vector2f(120, 80), Vector2f(120, 50));
+    Button accept_button("Aceptar", Vector2f(120, 80), Vector2f(120, 50), font);
 
     function<void(void)> acceptClickEvent = [&]() {
         this->lost_message->close();
@@ -47,7 +47,7 @@ void Game_Loop::render_game_over_window() {
 
     accept_button.setClickEvent(acceptClickEvent);
 
-    Button cancel_button("Cancelar", Vector2f(260, 80), Vector2f(120, 50));
+    Button cancel_button("Cancelar", Vector2f(260, 80), Vector2f(120, 50), font);
 
     function<void(void)> cancelClickEvent = [&]() {
         this->lost_message->close();
@@ -128,8 +128,8 @@ void Game_Loop::start() {
 
     Music music;
 
-    //if (!music.openFromFile("sounds/theme.wav"))
-    //    throw("Error al cargar la música");
+    if (!music.openFromFile("../sounds/theme.wav"))
+        throw("Error al cargar la música");
     
     music.setLoop(true);
     music.play();

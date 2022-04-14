@@ -12,8 +12,9 @@ private:
     RectangleShape rectagle;
     string text;
     function<void(void)> clickEventFunction;
+    Font font;
 public:
-    Button(const string text_string, const Vector2f location, const Vector2f size);
+    Button(const string text_string, const Vector2f location, const Vector2f size, Font font);
     ~Button();
     void setText(const string text);
     void draw(RenderTarget& target, RenderStates states) const;
