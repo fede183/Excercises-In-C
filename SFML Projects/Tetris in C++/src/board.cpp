@@ -3,7 +3,7 @@
 
 #include "../classes/point.hpp"
 #include "../classes/board.hpp"
-#include "../../Generic SFML Utils/src/linked_list.cpp"
+#include "linked_list.cpp"
 #include "piece.cpp"
 
 bool operator==(const PointForBoard& point1, const PointForBoard& point2)
@@ -97,7 +97,7 @@ bool Board::has_colitions_bottom_or_remains(Piece* piece) {
 
 bool Board::has_colitions_bottom_and_top(Piece* piece) {
     bool has_colitions_top = false;
-    int board_row_size = this->board_row_size;
+    unsigned int board_row_size = this->board_row_size;
     for (unsigned int i = 0; i < 4; i++)
     {
         Point point = piece->get_point(i);

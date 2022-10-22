@@ -6,7 +6,7 @@
 #include "../classes/config.hpp"
 #include "../classes/game_loop.hpp"
 
-#include "../../Generic SFML Utils/src/button.cpp"
+#include "button.cpp"
 
 
 Game_Loop::Game_Loop() {
@@ -89,7 +89,7 @@ void Game_Loop::start() {
     Texture texturePoint;
 
     if (!texturePoint.loadFromFile("../images/tiles.png"))
-        throw("Error al cargar la textura");
+        throw("Texture load error");
     
 
     Sprite sprite(texturePoint);
@@ -183,7 +183,7 @@ void Game_Loop::start() {
         if (!this->game->is_game_over()) {
             // Draw Points
             Point* points = this->game->get_all_points();
-            int point_quantity = this->game->get_point_quantity();
+            unsigned int point_quantity = this->game->get_point_quantity();
 
             for (unsigned int i = 0; i < point_quantity; i++)
             {

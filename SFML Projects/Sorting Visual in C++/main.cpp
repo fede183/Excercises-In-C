@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../Generic SFML Utils/src/random_number_generator.cpp"
-#include "../Generic SFML Utils/src/button.cpp"
+#include "src/random_number_generator.cpp"
+#include "src/button.cpp"
 
 using namespace sf;
 

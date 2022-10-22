@@ -1,8 +1,7 @@
 main: main.o
-	g++ src/*.o -Wall -g -o sorting.out -lsfml-graphics -lsfml-window -lsfml-system
-
+	g++ *.o -Wall -g -o sorting.out -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 main.o:
-	g++ -g -Wall -c src/main.c -o src/main.o
+	g++ -Wall -c -o main.o main.cpp -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 .PHONY: clean
 clean:

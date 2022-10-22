@@ -4,7 +4,7 @@
 #include "../classes/point.hpp"
 #include "../classes/piece.hpp"
 #include "../classes/color.hpp"
-#include "../../Generic SFML Utils/src/random_number_generator.cpp"
+#include "random_number_generator.cpp"
 
 Piece::Piece() {
     unsigned int piece = random_number_generator(0, 7);

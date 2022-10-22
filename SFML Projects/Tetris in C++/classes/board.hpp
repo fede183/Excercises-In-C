@@ -1,6 +1,6 @@
 
 #include "point.hpp"
-#include "../../Generic SFML Utils/classes/linked_list.hpp"
+#include "linked_list.hpp"
 #include "piece.hpp"
 #include "color.hpp"
 
