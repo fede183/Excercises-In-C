@@ -13,8 +13,11 @@ private:
     Game* game;
     RenderWindow* window;
     RenderWindow* lost_message;
+    Texture* texturePoint;
+    Font* font;
+    Music* music;
 public:
-    Game_Loop();
+    Game_Loop(Texture* texturePoint, Font* font, Music* music);
     ~Game_Loop();
     void render_game_over_window();
     void start();

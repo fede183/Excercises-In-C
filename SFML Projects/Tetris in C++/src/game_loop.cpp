@@ -9,9 +9,13 @@
 #include "button.cpp"
 
 
-Game_Loop::Game_Loop() {
+Game_Loop::Game_Loop(Texture* texturePoint, Font* font, Music* music) {
     this->window = new RenderWindow(VideoMode(Config::display_width + Config::display_side_block_width, Config::display_heigth), "Tetris!");
     this->game = new Game();
+
+    this->texturePoint = texturePoint;
+    this->font = font;
+    this->music = music;
 }
 
 Game_Loop::~Game_Loop() {
@@ -24,20 +28,15 @@ void Game_Loop::render_game_over_window() {
     this->lost_message = new RenderWindow(VideoMode(Config::display_lost_message_width, Config::display_lost_message_heigth), "Game Over!");
     
     Text text;
-    Font font;
-
-    if (!font.loadFromFile("../fonts/textFont.ttf"))
-        throw("Error al cargar la fuente");
-    
 
     text.setCharacterSize(24);
     text.setStyle(Text::Bold);
-    text.setFont(font);
+    text.setFont(*this->font);
     text.setFillColor(Color::Black);
     text.setPosition(25, 30);
     text.setString("Game Over!");
 
-    Button accept_button("Aceptar", Vector2f(120, 80), Vector2f(120, 50), font);
+    Button accept_button("Aceptar", Vector2f(120, 80), Vector2f(120, 50), *this->font);
 
     function<void(void)> acceptClickEvent = [&]() {
         this->lost_message->close();
@@ -47,7 +46,7 @@ void Game_Loop::render_game_over_window() {
 
     accept_button.setClickEvent(acceptClickEvent);
 
-    Button cancel_button("Cancelar", Vector2f(260, 80), Vector2f(120, 50), font);
+    Button cancel_button("Cancelar", Vector2f(260, 80), Vector2f(120, 50), *this->font);
 
     function<void(void)> cancelClickEvent = [&]() {
         this->lost_message->close();
@@ -86,13 +85,7 @@ void draw_sprite(const unsigned int x, const unsigned int y, color point_color, 
 }
 
 void Game_Loop::start() {
-    Texture texturePoint;
-
-    if (!texturePoint.loadFromFile("../images/tiles.png"))
-        throw("Texture load error");
-    
-
-    Sprite sprite(texturePoint);
+    Sprite sprite(*this->texturePoint);
 
     float scale = (float)Config::square_sixe / 18;
     sprite.setScale(scale, scale);
@@ -112,27 +105,18 @@ void Game_Loop::start() {
     rectangle_next_piece.setPosition(Config::display_next_piece_block_position_x, Config::display_next_piece_block_position_y);
 
     Text textScore;
-    Font font;
-
-    if (!font.loadFromFile("../fonts/textFont.ttf"))
-        throw("Error al cargar la fuente");
     
 
     textScore.setCharacterSize(24);
     textScore.setStyle(Text::Bold);
-    textScore.setFont(font);
+    textScore.setFont(*font);
     textScore.setFillColor(Color::Black);
 
     float timer = 0, delay = 0;
     Clock clock;
-
-    Music music;
-
-    if (!music.openFromFile("../sounds/theme.wav"))
-        throw("Error al cargar la música");
     
-    music.setLoop(true);
-    music.play();
+    this->music->setLoop(true);
+    music->play();
 
     while (this->window->isOpen())
     {
