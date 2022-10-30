@@ -78,7 +78,7 @@ T* Linked_List<T>::get_value(int index) {
         return &(this->last->data);
     } else {
         Node<T>* iterator = this->first;
-        for (unsigned int i = 0; i < index; i++)
+        for (int i = 0; i < index; i++)
         {
             iterator = iterator->next;
         }

@@ -15,8 +15,8 @@ int main()
 
     Music music;
 
-    if (!music.openFromFile("sounds/theme.wav"))
-        throw("Error al cargar la música");
+    //if (!music.openFromFile("sounds/theme.wav"))
+    //    throw("Error al cargar la música");
 
     Game_Loop* game_loop = new Game_Loop(&texturePoint, &font, &music);
 

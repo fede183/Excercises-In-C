@@ -34,12 +34,14 @@ void Piece::copy(Piece* copy) {
     }
 }
 
-Point Piece::get_center_point() {
+Point Piece::get_center_point(int board_column_size) {
     return this->positions[1];
 }
+
 Point Piece::get_point(const unsigned int index) {
     return this->positions[index];
 }
+
 void Piece::set_point(const unsigned int x, const unsigned int y, const unsigned int index) {
     this->positions[index].x = x;
     this->positions[index].y = y;
@@ -52,6 +54,7 @@ void Piece::move(const unsigned int dx) {
             this->positions[i].x += dx;
         }
 }
+
 void Piece::descend(const unsigned int dy) {
     //|Move
     //V

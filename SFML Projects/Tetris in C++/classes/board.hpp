@@ -36,5 +36,6 @@ public:
     unsigned int delete_complete_lines();
     unsigned int get_row_quantity();
     unsigned int get_column_quantity(const unsigned int index);
+    unsigned int get_column_size();
 };
 #endif // BOARD_HPP

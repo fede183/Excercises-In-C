@@ -33,7 +33,8 @@ void Game::descend() {
 }
 
 void Game::rotate() {
-    Point center_point = this->piece->get_center_point();
+    Point center_point = this->piece->get_center_point(this->board->get_column_size());
+    printf("center point is: (%i, %i)\n", center_point.x, center_point.y);
     for (int i = 0; i < 4; i++) {
         unsigned int rotate_x = this->piece->get_point(i).y - center_point.y;
         unsigned int rotate_y = this->piece->get_point(i).x - center_point.x;         
@@ -41,11 +42,11 @@ void Game::rotate() {
     }
 
     while (this->board->has_colitions_border_or_remains(this->piece)) {
-        this->piece->move(1);
+        this->move_right();
     }
 
     while (this->piece->has_colitions_top()) {
-        this->piece->descend(1);
+        this->descend();
     }
 
 }

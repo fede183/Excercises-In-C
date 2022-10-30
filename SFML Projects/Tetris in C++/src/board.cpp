@@ -145,3 +145,7 @@ unsigned int Board::get_row_quantity() {
 unsigned int Board::get_column_quantity(const unsigned int index) {
     return this->board_rows->get_value(index)->get_size();
 }
+
+unsigned int Board::get_column_size() {
+    return this->board_column_size;
+}

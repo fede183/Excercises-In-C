@@ -12,7 +12,7 @@ public:
     ~Piece();
 
     void copy(Piece*);
-    Point get_center_point();
+    Point get_center_point(int board_column_size);
     Point get_point(const unsigned int index);
     void set_point(const unsigned int x, const unsigned int y, const unsigned int index);
 
