@@ -1,7 +1,6 @@
 
 #include <iostream>
 
-#include "../classes/point.hpp"
 #include "../classes/board.hpp"
 #include "linked_list.cpp"
 #include "piece.cpp"

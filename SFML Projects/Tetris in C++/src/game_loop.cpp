@@ -105,7 +105,6 @@ void Game_Loop::start() {
     rectangle_next_piece.setPosition(Config::display_next_piece_block_position_x, Config::display_next_piece_block_position_y);
 
     Text textScore;
-    
 
     textScore.setCharacterSize(24);
     textScore.setStyle(Text::Bold);
@@ -162,7 +161,7 @@ void Game_Loop::start() {
             timer = 0;
         }
 
-        bool needs_new_piece = this->game->check_state();
+        this->game->check_state();
 
         if (!this->game->is_game_over()) {
             // Draw Points

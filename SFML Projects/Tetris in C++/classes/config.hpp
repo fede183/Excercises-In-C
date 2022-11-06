@@ -29,24 +29,5 @@ namespace Config
 
     const unsigned int scores[4] = {40, 100, 300, 1200};
     const float delays_for_level[4] = {0.48, 0.43, 0.38, 0.33};
-
-    //------
-    //|0|1|8|12|
-    //|2|3|9|13|
-    //|4|5|10|14|
-    //|6|7|11|15|
-    //------
-
-    const unsigned int figures[7][4] = {
-        0, 2, 4, 6, //I
-        1, 2, 3, 4, //Z
-        0, 2, 3, 5, //S
-        0, 2, 4, 5, //L
-        1, 2, 3, 5, //T
-        0, 1, 2, 3, //O
-        1, 3, 4, 5, //J
-    };
-
-
 };
 #endif // CONFIG_HPP

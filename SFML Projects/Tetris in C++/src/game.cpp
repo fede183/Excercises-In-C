@@ -1,5 +1,5 @@
 #include "../classes/config.hpp"
-#include "../classes/point.hpp"
+#include "../classes/piece.hpp"
 #include "../classes/game.hpp"
 #include "board.cpp"
 
@@ -33,7 +33,7 @@ void Game::descend() {
 }
 
 void Game::rotate() {
-    Point center_point = this->piece->get_center_point(this->board->get_column_size());
+    Point center_point = this->piece->get_center_point();
     printf("center point is: (%i, %i)\n", center_point.x, center_point.y);
     for (int i = 0; i < 4; i++) {
         unsigned int rotate_x = this->piece->get_point(i).y - center_point.y;
@@ -70,9 +70,8 @@ unsigned int Game::get_level() {
     return level;
 }
 
-bool Game::check_state() {
-    bool needs_new_piece = this->board->has_colitions_bottom_or_remains(this->piece); 
-    if (needs_new_piece) {
+void Game::check_state() {
+    if (this->board->has_colitions_bottom_or_remains(this->piece)) {
         this->backout_piece->copy(this->piece);
         this->board->add_piece(this->piece);
         // Check Board for complete lines
@@ -85,7 +84,6 @@ bool Game::check_state() {
         this->next_piece = new Piece();
         this->piece->copy(this->backout_piece);
     }
-    return needs_new_piece;
 }
 
 unsigned int Game::get_point_quantity() {

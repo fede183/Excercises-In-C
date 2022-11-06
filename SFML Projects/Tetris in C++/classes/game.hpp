@@ -29,7 +29,7 @@ public:
     unsigned int get_score();
     unsigned int get_level();
 
-    bool check_state();
+    void check_state();
     
     unsigned int get_point_quantity();
     Point* get_all_points();

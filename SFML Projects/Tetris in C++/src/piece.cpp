@@ -1,7 +1,6 @@
 #include <iterator>
 
 #include "../classes/config.hpp"
-#include "../classes/point.hpp"
 #include "../classes/piece.hpp"
 #include "../classes/color.hpp"
 #include "random_number_generator.cpp"
@@ -11,9 +10,19 @@ Piece::Piece() {
     unsigned int colorInt = random_number_generator(0, 7);
     color theColor = static_cast<color>(colorInt);
 
+    const unsigned int figures[7][4] = {
+        0, 2, 4, 6, //I
+        1, 2, 3, 4, //Z
+        0, 2, 3, 5, //S
+        0, 2, 4, 5, //L
+        1, 2, 3, 5, //T
+        0, 1, 2, 3, //O
+        1, 3, 4, 5, //J
+    };
+
     for (unsigned int i = 0; i < 4; i++)
     {
-        unsigned int figure_position = Config::figures[piece][i]; 
+        unsigned int figure_position = figures[piece][i]; 
         this->positions[i].x = figure_position % 2;
         this->positions[i].y = figure_position / 2;
         this->positions[i].point_color = theColor;
@@ -34,7 +43,7 @@ void Piece::copy(Piece* copy) {
     }
 }
 
-Point Piece::get_center_point(int board_column_size) {
+Point Piece::get_center_point() {
     return this->positions[1];
 }
 

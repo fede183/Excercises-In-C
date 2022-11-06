@@ -1,5 +1,3 @@
-
-#include "point.hpp"
 #include "linked_list.hpp"
 #include "piece.hpp"
 #include "color.hpp"
