@@ -61,7 +61,7 @@ void Board::add_point(Point point) {
 
 void Board::add_piece(Piece* piece) {
     for (unsigned int i = 0; i < 4; i++) {
-        this->add_point(piece->get_point(i));
+        this->add_point(piece->positions[i]);
     }
 }
 
@@ -86,7 +86,7 @@ bool Board::has_colitions_bottom_or_remains(Piece* piece) {
     unsigned int board_row_size = this->board_row_size;
     for (unsigned int i = 0; i < 4; i++)
     {
-        Point point = piece->get_point(i);
+        Point point = piece->positions[i];
         has_colitions_top = has_colitions_top || 
         !(point.y < board_row_size) || this->has_point(point);
     }
@@ -99,7 +99,7 @@ bool Board::has_colitions_bottom_and_top(Piece* piece) {
     unsigned int board_row_size = this->board_row_size;
     for (unsigned int i = 0; i < 4; i++)
     {
-        Point point = piece->get_point(i);
+        Point point = piece->positions[i];
         has_colitions_top = has_colitions_top || 
         (board_row_size <= point.y || this->has_point(point));
     }
@@ -111,7 +111,7 @@ bool Board::has_colitions_border_or_remains(Piece* piece) {
     bool has_colitions_border_or_remains = false;
     for (unsigned int i = 0; i < 4; i++)
     {
-        Point point = piece->get_point(i);
+        Point point = piece->positions[i];
         has_colitions_border_or_remains = has_colitions_border_or_remains || 
         !(0 <= point.x && point.x < this->board_column_size) 
         || this->has_point(point);

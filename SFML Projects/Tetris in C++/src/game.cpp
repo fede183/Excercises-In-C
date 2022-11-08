@@ -6,10 +6,10 @@
 Game::Game() {
     // Declare Board
     this->board = new Board(Config::complete_vertical_squares, Config::horizontal_squares);
-    this->piece = new Piece();
-    this->backout_piece = new Piece();
-    this->piece->copy(this->backout_piece);
-    this->next_piece = new Piece();
+    this->piece = createPiece();
+    this->backout_piece = createPiece();
+    copy(this->piece, this->backout_piece);
+    this->next_piece = createPiece();
 }
 
 Game::~Game() {
@@ -18,34 +18,43 @@ Game::~Game() {
 }
 
 void Game::move_left() {
-    this->piece->move(-1);
+    for (int i = 0; i < 4; i++) {
+        this->piece->positions[i].x -= 1;
+    }
     if (this->board->has_colitions_border_or_remains(this->piece)) 
-        this->backout_piece->copy(this->piece);
+        copy(this->backout_piece, this->piece);
 }
 
 void Game::move_right() {
-    this->piece->move(1);
+    for (int i = 0; i < 4; i++) {
+        this->piece->positions[i].x += 1;
+    }
     if (this->board->has_colitions_border_or_remains(this->piece)) 
-        this->backout_piece->copy(this->piece);
+        copy(this->backout_piece, this->piece);
 }
+
 void Game::descend() {
-    this->piece->descend(1);
+    for (int i = 0; i < 4; i++) {
+        this->piece->positions[i].y += 1;
+    }
 }
 
 void Game::rotate() {
-    Point center_point = this->piece->get_center_point();
+    Point center_point = this->piece->positions[1];
     printf("center point is: (%i, %i)\n", center_point.x, center_point.y);
     for (int i = 0; i < 4; i++) {
-        unsigned int rotate_x = this->piece->get_point(i).y - center_point.y;
-        unsigned int rotate_y = this->piece->get_point(i).x - center_point.x;         
-        this->piece->set_point(center_point.x - rotate_x, center_point.y + rotate_y, i);
+        unsigned int rotate_x = this->piece->positions[i].y - center_point.y;
+        unsigned int rotate_y = this->piece->positions[i].x - center_point.x;         
+        this->piece->positions[i].x = center_point.x - rotate_x;
+        this->piece->positions[i].y =  center_point.y + rotate_y;
+
     }
 
     while (this->board->has_colitions_border_or_remains(this->piece)) {
         this->move_right();
     }
 
-    while (this->piece->has_colitions_top()) {
+    while (has_colitions_top(this->piece)) {
         this->descend();
     }
 
@@ -60,7 +69,7 @@ void Game::clean_for_cycle() {
         complete_lines -= 10;
         level += 1;
     } 
-    this->piece->copy(this->backout_piece);
+    copy(this->piece, this->backout_piece);
 }
 
 unsigned int Game::get_score() {
@@ -72,7 +81,7 @@ unsigned int Game::get_level() {
 
 void Game::check_state() {
     if (this->board->has_colitions_bottom_or_remains(this->piece)) {
-        this->backout_piece->copy(this->piece);
+        copy(this->backout_piece, this->piece);
         this->board->add_piece(this->piece);
         // Check Board for complete lines
         int complete_lines_quantity = this->board->delete_complete_lines();
@@ -80,9 +89,9 @@ void Game::check_state() {
         this->complete_lines += complete_lines_quantity;
 
         // Get next piece
-        this->next_piece->copy(this->piece);
-        this->next_piece = new Piece();
-        this->piece->copy(this->backout_piece);
+        copy(this->next_piece, this->piece);
+        this->next_piece = createPiece();
+        copy(this->piece, this->backout_piece);
     }
 }
 
@@ -104,7 +113,7 @@ Point* Game::get_next_piece_points() {
 
     for (unsigned int i = 0; i < 4; i++)
     {
-        Point point = this->next_piece->get_point(i);
+        Point point = this->next_piece->positions[i];
 
         point.x += Config::next_piece_block_position_x + 2;
         point.y += Config::next_piece_block_position_y;
@@ -151,7 +160,7 @@ Point* Game::get_all_points() {
 
     for (unsigned int i = 0; i < 4; i++)
     {
-        points[i + point_index] = this->piece->get_point(i);
+        points[i + point_index] = this->piece->positions[i];
     }
 
     return points;

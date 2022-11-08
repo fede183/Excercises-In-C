@@ -1,11 +1,15 @@
 #include <iterator>
+#include <iostream>
 
 #include "../classes/config.hpp"
 #include "../classes/piece.hpp"
 #include "../classes/color.hpp"
 #include "random_number_generator.cpp"
 
-Piece::Piece() {
+Piece* createPiece() {
+
+    Piece* newPiece = (Piece*) malloc(sizeof(Piece));
+
     unsigned int piece = random_number_generator(0, 7);
     unsigned int colorInt = random_number_generator(0, 7);
     color theColor = static_cast<color>(colorInt);
@@ -23,62 +27,40 @@ Piece::Piece() {
     for (unsigned int i = 0; i < 4; i++)
     {
         unsigned int figure_position = figures[piece][i]; 
-        this->positions[i].x = figure_position % 2;
-        this->positions[i].y = figure_position / 2;
-        this->positions[i].point_color = theColor;
+        newPiece->positions[i].x = figure_position % 2;
+        newPiece->positions[i].y = figure_position / 2;
+        newPiece->positions[i].point_color = theColor;
     }
+
+    return newPiece;
 }
-Piece::Piece(Point positions[4]) {
+
+Piece* createPoint(Point positions[4]) {
+    Piece* newPiece = (Piece*) malloc(sizeof(Piece));
     for (unsigned int i = 0; i < 4; i++)
     {
-        this->positions[i] = positions[i];
+        newPiece->positions[i] = positions[i];
     }
+    return newPiece;
 }
-Piece::~Piece() {}
 
-void Piece::copy(Piece* copy) {
+void copy(Piece* from, Piece* to) {
     for (unsigned int i = 0; i < 4; i++)
     {
-        copy->positions[i] = this->positions[i];
+        to->positions[i] = from->positions[i];
     }
 }
 
-Point Piece::get_center_point() {
-    return this->positions[1];
+Point get_center_point(Piece* piece) {
+    return piece->positions[1];
 }
 
-Point Piece::get_point(const unsigned int index) {
-    return this->positions[index];
-}
-
-void Piece::set_point(const unsigned int x, const unsigned int y, const unsigned int index) {
-    this->positions[index].x = x;
-    this->positions[index].y = y;
-}
-
-void Piece::move(const unsigned int dx) {
-    //<-Move->
-    if (dx != 0) 
-        for (unsigned int i = 0; i < 4; i++) {
-            this->positions[i].x += dx;
-        }
-}
-
-void Piece::descend(const unsigned int dy) {
-    //|Move
-    //V
-    if (dy != 0) 
-        for (unsigned int i = 0; i < 4; i++) {
-            this->positions[i].y += dy;
-        }
-}
-
-bool Piece::has_colitions_top() {
+bool has_colitions_top(Piece* piece) {
     bool has_colitions_top = false;
     for (unsigned int i = 0; i < 4; i++)
     {
         has_colitions_top = has_colitions_top || 
-        !(0 <= this->positions[i].y);
+        !(0 <= piece->positions[i].y);
     }
     return has_colitions_top;
 }
