@@ -5,7 +5,7 @@
 
 Game::Game() {
     // Declare Board
-    this->board = new Board(Config::complete_vertical_squares, Config::horizontal_squares);
+    this->board = createBoard(Config::complete_vertical_squares, Config::horizontal_squares);
     this->piece = createPiece();
     this->backout_piece = createPiece();
     copy(this->piece, this->backout_piece);
@@ -13,6 +13,7 @@ Game::Game() {
 }
 
 Game::~Game() {
+    delete board->board_rows;
     delete board;
     delete piece;
 }
@@ -21,7 +22,7 @@ void Game::move_left() {
     for (int i = 0; i < 4; i++) {
         this->piece->positions[i].x -= 1;
     }
-    if (this->board->has_colitions_border_or_remains(this->piece)) 
+    if (has_colitions_border_or_remains(this->board, this->piece)) 
         copy(this->backout_piece, this->piece);
 }
 
@@ -29,7 +30,7 @@ void Game::move_right() {
     for (int i = 0; i < 4; i++) {
         this->piece->positions[i].x += 1;
     }
-    if (this->board->has_colitions_border_or_remains(this->piece)) 
+    if (has_colitions_border_or_remains(this->board, this->piece)) 
         copy(this->backout_piece, this->piece);
 }
 
@@ -50,7 +51,7 @@ void Game::rotate() {
 
     }
 
-    while (this->board->has_colitions_border_or_remains(this->piece)) {
+    while (has_colitions_border_or_remains(this->board, this->piece)) {
         this->move_right();
     }
 
@@ -61,7 +62,7 @@ void Game::rotate() {
 }
 
 bool Game::is_game_over() {
-    return this->board->get_row_quantity() > Config::vertical_squares;
+    return get_row_quantity(this->board) > Config::vertical_squares;
 }
 
 void Game::clean_for_cycle() {
@@ -80,11 +81,11 @@ unsigned int Game::get_level() {
 }
 
 void Game::check_state() {
-    if (this->board->has_colitions_bottom_or_remains(this->piece)) {
+    if (has_colitions_bottom_or_remains(this->board, this->piece)) {
         copy(this->backout_piece, this->piece);
-        this->board->add_piece(this->piece);
+        add_piece(this->board, this->piece);
         // Check Board for complete lines
-        int complete_lines_quantity = this->board->delete_complete_lines();
+        int complete_lines_quantity = delete_complete_lines(this->board);
         this->score += Config::scores[complete_lines_quantity - 1];
         this->complete_lines += complete_lines_quantity;
 
@@ -97,10 +98,10 @@ void Game::check_state() {
 
 unsigned int Game::get_point_quantity() {
     unsigned int point_quantity = 0;
-    unsigned int row_len = this->board->get_row_quantity();
+    unsigned int row_len = get_row_quantity(this->board);
     for (unsigned int j = 0; j < row_len; j++)
     {
-        unsigned int column_len = this->board->get_column_quantity(j);
+        unsigned int column_len = get_column_quantity(this->board, j);
         point_quantity += column_len;
     }
 
@@ -126,8 +127,8 @@ Point* Game::get_next_piece_points() {
 
 Point* Game::get_all_points() {
 
-    PointForBoard** columns = this->board->get_columns();
-    unsigned int row_len = this->board->get_row_quantity();
+    PointForBoard** columns = get_columns(this->board);
+    unsigned int row_len = get_row_quantity(this->board);
     unsigned int point_quantity = this->get_point_quantity();
     Point* points = (Point*) malloc(sizeof(Point) * point_quantity);
 
@@ -135,7 +136,7 @@ Point* Game::get_all_points() {
     for (unsigned int j = 0; j < row_len; j++)
     {
         PointForBoard* column = columns[j];
-        unsigned int column_len = this->board->get_column_quantity(j);
+        unsigned int column_len = get_column_quantity(this->board, j);
         for (unsigned int i = 0; i < column_len; i++)
         {
             unsigned int real_y = Config::complete_vertical_squares - 1 - j;
