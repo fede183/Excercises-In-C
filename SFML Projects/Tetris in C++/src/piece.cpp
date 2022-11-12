@@ -1,10 +1,10 @@
 #include <iterator>
 #include <iostream>
 
-#include "../classes/config.hpp"
+#include "../classes/config.h"
 #include "../classes/piece.hpp"
-#include "../classes/color.hpp"
-#include "random_number_generator.cpp"
+#include "../classes/color.h"
+#include "random_number_generator.c"
 
 Piece* createPiece() {
 

@@ -16,8 +16,10 @@ Texture texturePoint;
 Music music;
 Game* game;
 
+const float delays_for_level[4] = {0.48, 0.43, 0.38, 0.33};
+
 void render_game_over_window() {
-    lost_message = new RenderWindow(VideoMode(Config::display_lost_message_width, Config::display_lost_message_heigth), "Game Over!");
+    lost_message = new RenderWindow(VideoMode(display_lost_message_width, display_lost_message_heigth), "Game Over!");
     
     Text text;
 
@@ -69,9 +71,9 @@ void render_game_over_window() {
 
 
 void draw_sprite(const unsigned int x, const unsigned int y, color point_color, Sprite& sprite) {
-    if (Config::invisible_squares <= y) {
+    if (invisible_squares <= y) {
         sprite.setTextureRect(IntRect(18*point_color, 0, 18, 18));
-        sprite.setPosition(x*Config::square_sixe, (y + Config::header_squares)*Config::square_sixe);
+        sprite.setPosition(x*square_sixe, (y + header_squares)*square_sixe);
     }
 }
 
@@ -86,27 +88,27 @@ int main()
     //if (!music.openFromFile("sounds/theme.wav"))
     //    throw("Error al cargar la música");
 
-    RenderWindow* window = new RenderWindow(VideoMode(Config::display_width + Config::display_side_block_width, Config::display_heigth), "Tetris!");
+    RenderWindow* window = new RenderWindow(VideoMode(display_width + display_side_block_width, display_heigth), "Tetris!");
     Game* game = createGame();
 
     Sprite sprite(texturePoint);
 
-    float scale = (float)Config::square_sixe / 18;
+    float scale = (float)square_sixe / 18;
     sprite.setScale(scale, scale);
     
     RectangleShape rectangle_header;
-    rectangle_header.setSize(Vector2f(Config::display_width, Config::display_header));
+    rectangle_header.setSize(Vector2f(display_width, display_header));
     rectangle_header.setFillColor(Color(190, 180, 180));
 
     RectangleShape rectangle_side_block;
-    rectangle_side_block.setSize(Vector2f(Config::display_side_block_width, Config::display_header + Config::display_heigth));
+    rectangle_side_block.setSize(Vector2f(display_side_block_width, display_header + display_heigth));
     rectangle_side_block.setFillColor(Color(190, 180, 180));
-    rectangle_side_block.setPosition(Config::display_width, 0);
+    rectangle_side_block.setPosition(display_width, 0);
 
     RectangleShape rectangle_next_piece;
-    rectangle_next_piece.setSize(Vector2f(Config::display_next_piece_block_width, Config::display_next_piece_block_heigth));
+    rectangle_next_piece.setSize(Vector2f(display_next_piece_block_width, display_next_piece_block_heigth));
     rectangle_next_piece.setFillColor(Color::Black);
-    rectangle_next_piece.setPosition(Config::display_next_piece_block_position_x, Config::display_next_piece_block_position_y);
+    rectangle_next_piece.setPosition(display_next_piece_block_position_x, display_next_piece_block_position_y);
 
     Text textScore;
 
@@ -123,7 +125,7 @@ int main()
 
     while (window->isOpen())
     {
-        delay = Config::delays_for_level[game->level];
+        delay = delays_for_level[game->level];
         float time = clock.getElapsedTime().asSeconds();
         clock.restart();
         timer += time;

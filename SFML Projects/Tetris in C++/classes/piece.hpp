@@ -1,4 +1,4 @@
-#include "color.hpp"
+#include "color.h"
 
 #ifndef PIECE_HPP
 #define PIECE_HPP

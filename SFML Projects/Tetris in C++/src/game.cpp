@@ -1,4 +1,4 @@
-#include "../classes/config.hpp"
+#include "../classes/config.h"
 #include "../classes/piece.hpp"
 #include "../classes/game.hpp"
 #include "board.cpp"
@@ -6,7 +6,7 @@
 Game* createGame() {
     Game* newGame = (Game*) malloc(sizeof(Game));
     // Declare Game
-    newGame->board = createBoard(Config::complete_vertical_squares, Config::horizontal_squares);
+    newGame->board = createBoard(complete_vertical_squares, horizontal_squares);
     newGame->piece = createPiece();
     newGame->backout_piece = createPiece();
     copy(newGame->piece, newGame->backout_piece);
@@ -70,7 +70,7 @@ void rotate(Game* game) {
 }
 
 bool is_game_over(Game* game) {
-    return get_row_quantity(game->board) > Config::vertical_squares;
+    return get_row_quantity(game->board) > vertical_squares;
 }
 
 void clean_for_cycle(Game* game) {
@@ -87,7 +87,9 @@ void check_state(Game* game) {
         add_piece(game->board, game->piece);
         // Check Board for complete lines
         int complete_lines_quantity = delete_complete_lines(game->board);
-        game->score += Config::scores[complete_lines_quantity - 1];
+        const unsigned int scores[4] = {40, 100, 300, 1200};
+
+        game->score += scores[complete_lines_quantity - 1];
         game->complete_lines += complete_lines_quantity;
 
         // Get next piece
@@ -117,8 +119,8 @@ Point* get_next_piece_points(Game* game) {
     {
         Point point = game->next_piece->positions[i];
 
-        point.x += Config::next_piece_block_position_x + 2;
-        point.y += Config::next_piece_block_position_y;
+        point.x += next_piece_block_position_x + 2;
+        point.y += next_piece_block_position_y;
 
         points[i] = point;
     }
@@ -140,7 +142,7 @@ Point* get_all_points(Game* game) {
         unsigned int column_len = get_column_quantity(game->board, j);
         for (unsigned int i = 0; i < column_len; i++)
         {
-            unsigned int real_y = Config::complete_vertical_squares - 1 - j;
+            unsigned int real_y = complete_vertical_squares - 1 - j;
             unsigned int position_x = column[i].x;
             unsigned int position_y = real_y;
             color point_color = column[i].point_color;

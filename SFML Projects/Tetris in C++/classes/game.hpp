@@ -1,6 +1,6 @@
 #include "board.hpp"
 #include "piece.hpp"
-#include "config.hpp"
+#include "config.h"
 
 #ifndef GAME_HPP
 #define GAME_HPP
