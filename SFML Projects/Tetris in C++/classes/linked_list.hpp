@@ -8,12 +8,12 @@ class Linked_List
 private:
     Node<T>* first;
     Node<T>* last;
-    unsigned int size;
+    int size;
 public:
     Linked_List();
     ~Linked_List();
 
-    unsigned int get_size();
+    int get_size();
 
     void push(T data);
     void remove(int index);

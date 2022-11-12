@@ -84,7 +84,7 @@ bool has_point(Board* board, Point point) {
 
 bool has_colitions_bottom_or_remains(Board* board, Piece* piece) {
     bool has_colitions_top = false;
-    unsigned int board_row_size = board->board_row_size;
+    int board_row_size = board->board_row_size;
     for (unsigned int i = 0; i < 4; i++)
     {
         Point point = piece->positions[i];
@@ -97,7 +97,7 @@ bool has_colitions_bottom_or_remains(Board* board, Piece* piece) {
 
 bool has_colitions_bottom_and_top(Board* board, Piece* piece) {
     bool has_colitions_top = false;
-    unsigned int board_row_size = board->board_row_size;
+    int board_row_size = board->board_row_size;
     for (unsigned int i = 0; i < 4; i++)
     {
         Point point = piece->positions[i];

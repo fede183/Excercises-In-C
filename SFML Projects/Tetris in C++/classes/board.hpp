@@ -7,14 +7,14 @@
 
 struct PointForBoard
 {
-    unsigned int x;
+    int x;
     color point_color;
 };
 
 struct Board
 {
     Linked_List<Linked_List<PointForBoard>>* board_rows;
-    unsigned int board_row_size;
-    unsigned int board_column_size;
+    int board_row_size;
+    int board_column_size;
 };
 #endif // BOARD_HPP

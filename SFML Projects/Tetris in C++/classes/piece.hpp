@@ -4,7 +4,7 @@
 #define PIECE_HPP
 struct Point
 {
-    unsigned int x, y;
+    int x, y;
     color point_color;
 };
 struct Piece

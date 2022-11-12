@@ -3,118 +3,119 @@
 #include "../classes/game.hpp"
 #include "board.cpp"
 
-Game::Game() {
-    // Declare Board
-    this->board = createBoard(Config::complete_vertical_squares, Config::horizontal_squares);
-    this->piece = createPiece();
-    this->backout_piece = createPiece();
-    copy(this->piece, this->backout_piece);
-    this->next_piece = createPiece();
+Game* createGame() {
+    Game* newGame = (Game*) malloc(sizeof(Game));
+    // Declare Game
+    newGame->board = createBoard(Config::complete_vertical_squares, Config::horizontal_squares);
+    newGame->piece = createPiece();
+    newGame->backout_piece = createPiece();
+    copy(newGame->piece, newGame->backout_piece);
+    newGame->next_piece = createPiece();
+
+    newGame->score = 0;
+    newGame->level = 0;
+    newGame->complete_lines = 0;
+
+    return newGame;
 }
 
-Game::~Game() {
-    delete board->board_rows;
-    delete board;
-    delete piece;
+void clean(Game* game) {
+    delete game->board->board_rows;
+    delete game->board;
+    delete game->piece;
+    delete game;
 }
 
-void Game::move_left() {
+void move_left(Game* game) {
     for (int i = 0; i < 4; i++) {
-        this->piece->positions[i].x -= 1;
+        game->piece->positions[i].x -= 1;
     }
-    if (has_colitions_border_or_remains(this->board, this->piece)) 
-        copy(this->backout_piece, this->piece);
+    if (has_colitions_border_or_remains(game->board, game->piece)) 
+        copy(game->backout_piece, game->piece);
 }
 
-void Game::move_right() {
+void move_right(Game* game) {
     for (int i = 0; i < 4; i++) {
-        this->piece->positions[i].x += 1;
+        game->piece->positions[i].x += 1;
     }
-    if (has_colitions_border_or_remains(this->board, this->piece)) 
-        copy(this->backout_piece, this->piece);
+    if (has_colitions_border_or_remains(game->board, game->piece)) 
+        copy(game->backout_piece, game->piece);
 }
 
-void Game::descend() {
+void descend(Game* game) {
     for (int i = 0; i < 4; i++) {
-        this->piece->positions[i].y += 1;
+        game->piece->positions[i].y += 1;
     }
 }
 
-void Game::rotate() {
-    Point center_point = this->piece->positions[1];
+void rotate(Game* game) {
+    Point center_point = game->piece->positions[1];
     printf("center point is: (%i, %i)\n", center_point.x, center_point.y);
     for (int i = 0; i < 4; i++) {
-        unsigned int rotate_x = this->piece->positions[i].y - center_point.y;
-        unsigned int rotate_y = this->piece->positions[i].x - center_point.x;         
-        this->piece->positions[i].x = center_point.x - rotate_x;
-        this->piece->positions[i].y =  center_point.y + rotate_y;
+        unsigned int rotate_x = game->piece->positions[i].y - center_point.y;
+        unsigned int rotate_y = game->piece->positions[i].x - center_point.x;         
+        game->piece->positions[i].x = center_point.x - rotate_x;
+        game->piece->positions[i].y =  center_point.y + rotate_y;
 
     }
 
-    while (has_colitions_border_or_remains(this->board, this->piece)) {
-        this->move_right();
+    while (has_colitions_border_or_remains(game->board, game->piece)) {
+        move_right(game);
     }
 
-    while (has_colitions_top(this->piece)) {
-        this->descend();
+    while (has_colitions_top(game->piece)) {
+        descend(game);
     }
 
 }
 
-bool Game::is_game_over() {
-    return get_row_quantity(this->board) > Config::vertical_squares;
+bool is_game_over(Game* game) {
+    return get_row_quantity(game->board) > Config::vertical_squares;
 }
 
-void Game::clean_for_cycle() {
-    if (complete_lines > 10 && level < 4) {
-        complete_lines -= 10;
-        level += 1;
+void clean_for_cycle(Game* game) {
+    if (game->complete_lines > 10 && game->level < 4) {
+        game->complete_lines -= 10;
+        game->level += 1;
     } 
-    copy(this->piece, this->backout_piece);
+    copy(game->piece, game->backout_piece);
 }
 
-unsigned int Game::get_score() {
-    return score;
-}
-unsigned int Game::get_level() {
-    return level;
-}
-
-void Game::check_state() {
-    if (has_colitions_bottom_or_remains(this->board, this->piece)) {
-        copy(this->backout_piece, this->piece);
-        add_piece(this->board, this->piece);
+void check_state(Game* game) {
+    if (has_colitions_bottom_or_remains(game->board, game->piece)) {
+        copy(game->backout_piece, game->piece);
+        add_piece(game->board, game->piece);
         // Check Board for complete lines
-        int complete_lines_quantity = delete_complete_lines(this->board);
-        this->score += Config::scores[complete_lines_quantity - 1];
-        this->complete_lines += complete_lines_quantity;
+        int complete_lines_quantity = delete_complete_lines(game->board);
+        game->score += Config::scores[complete_lines_quantity - 1];
+        game->complete_lines += complete_lines_quantity;
 
         // Get next piece
-        copy(this->next_piece, this->piece);
-        this->next_piece = createPiece();
-        copy(this->piece, this->backout_piece);
+        copy(game->next_piece, game->piece);
+        game->next_piece = createPiece();
+        copy(game->piece, game->backout_piece);
     }
 }
 
-unsigned int Game::get_point_quantity() {
+unsigned int get_point_quantity(Game* game) {
     unsigned int point_quantity = 0;
-    unsigned int row_len = get_row_quantity(this->board);
+    unsigned int row_len = get_row_quantity(game->board);
     for (unsigned int j = 0; j < row_len; j++)
     {
-        unsigned int column_len = get_column_quantity(this->board, j);
+        unsigned int column_len = get_column_quantity(game->board, j);
         point_quantity += column_len;
     }
 
     return point_quantity + 4;
 }
 
-Point* Game::get_next_piece_points() {
+Point* get_next_piece_points(Game* game) {
 
     Point* points = (Point*) malloc(sizeof(Point) * 4);
 
     for (unsigned int i = 0; i < 4; i++)
     {
-        Point point = this->next_piece->positions[i];
+        Point point = game->next_piece->positions[i];
 
         point.x += Config::next_piece_block_position_x + 2;
         point.y += Config::next_piece_block_position_y;
@@ -125,18 +126,18 @@ Point* Game::get_next_piece_points() {
     return points;
 }
 
-Point* Game::get_all_points() {
+Point* get_all_points(Game* game) {
 
-    PointForBoard** columns = get_columns(this->board);
-    unsigned int row_len = get_row_quantity(this->board);
-    unsigned int point_quantity = this->get_point_quantity();
+    PointForBoard** columns = get_columns(game->board);
+    unsigned int row_len = get_row_quantity(game->board);
+    unsigned int point_quantity = get_point_quantity(game);
     Point* points = (Point*) malloc(sizeof(Point) * point_quantity);
 
     unsigned int point_index = 0;
     for (unsigned int j = 0; j < row_len; j++)
     {
         PointForBoard* column = columns[j];
-        unsigned int column_len = get_column_quantity(this->board, j);
+        unsigned int column_len = get_column_quantity(game->board, j);
         for (unsigned int i = 0; i < column_len; i++)
         {
             unsigned int real_y = Config::complete_vertical_squares - 1 - j;
@@ -161,7 +162,7 @@ Point* Game::get_all_points() {
 
     for (unsigned int i = 0; i < 4; i++)
     {
-        points[i + point_index] = this->piece->positions[i];
+        points[i + point_index] = game->piece->positions[i];
     }
 
     return points;

@@ -1,7 +1,9 @@
 main: main.o
 	g++ *.o -Wall -g -o tetris.out -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
-main.o: game.o
+main.o: game.o button.o
 	g++ -Wall -c -o main.o main.cpp -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+button.o:
+	g++ -Wall -c -o src/button.o src/button.cpp -lsfml-graphics -lsfml-window -lsfml-system
 game.o: board.o piece.o
 	g++ -Wall -c -o src/game.o src/game.cpp
 board.o: linked_list.o piece.o

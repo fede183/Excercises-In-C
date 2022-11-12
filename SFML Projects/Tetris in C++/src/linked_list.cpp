@@ -17,7 +17,7 @@ Linked_List<T>::~Linked_List() {
 }
 
 template<class T>
-unsigned int Linked_List<T>::get_size() {
+int Linked_List<T>::get_size() {
     return this->size;
 }
 
@@ -40,7 +40,7 @@ void Linked_List<T>::push(T data) {
 
 template<class T>
 void Linked_List<T>::remove(int index) {
-    unsigned int size = this->size;
+    int size = this->size;
     Node<T>* node_to_delete;
     if (index == 0) {
         node_to_delete = this->first;
