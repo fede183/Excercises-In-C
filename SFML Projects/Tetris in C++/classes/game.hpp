@@ -1,5 +1,5 @@
 #include "board.hpp"
-#include "piece.hpp"
+#include "piece.h"
 #include "config.h"
 
 #ifndef GAME_HPP

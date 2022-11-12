@@ -11,7 +11,7 @@ board.o: linked_list.o piece.o
 linked_list.o:
 	g++ -Wall -c -o src/linked_list.o src/linked_list.cpp
 piece.o:
-	g++ -Wall -c -o src/piece.o src/piece.cpp
+	g++ -Wall -c -o src/piece.o src/piece.c
 .PHONY: clean
 clean:
 	rm -rf *.o && rm -rf src/*.o && rm -rf main && rm tetris.out

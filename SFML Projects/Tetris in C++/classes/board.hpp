@@ -1,5 +1,5 @@
 #include "linked_list.hpp"
-#include "piece.hpp"
+#include "piece.h"
 #include "color.h"
 
 #ifndef BOARD_HPP

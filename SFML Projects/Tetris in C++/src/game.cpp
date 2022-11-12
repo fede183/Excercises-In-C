@@ -1,5 +1,5 @@
 #include "../classes/config.h"
-#include "../classes/piece.hpp"
+#include "../classes/piece.h"
 #include "../classes/game.hpp"
 #include "board.cpp"
 

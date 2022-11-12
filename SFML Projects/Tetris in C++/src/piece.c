@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "../classes/config.h"
-#include "../classes/piece.hpp"
+#include "../classes/piece.h"
 #include "../classes/color.h"
 #include "random_number_generator.c"
 

@@ -3,7 +3,7 @@
 
 #include "../classes/board.hpp"
 #include "linked_list.cpp"
-#include "piece.cpp"
+#include "piece.c"
 
 bool operator==(const PointForBoard& point1, const PointForBoard& point2)
 {
