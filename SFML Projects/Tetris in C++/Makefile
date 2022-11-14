@@ -7,9 +7,9 @@ button.o:
 game.o: board.o piece.o
 	g++ -Wall -c -o src/game.o src/game.cpp
 board.o: linked_list.o piece.o
-	g++ -Wall -c -o src/board.o src/board.cpp
+	g++ -Wall -c -o src/board.o src/board.c
 linked_list.o:
-	g++ -Wall -c -o src/linked_list.o src/linked_list.cpp
+	g++ -Wall -c -o src/linked_list.o src/linked_list.c
 piece.o:
 	g++ -Wall -c -o src/piece.o src/piece.c
 .PHONY: clean

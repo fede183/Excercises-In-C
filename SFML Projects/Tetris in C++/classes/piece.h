@@ -2,13 +2,15 @@
 
 #ifndef PIECE_H
 #define PIECE_H
-struct Point
+typedef struct Point
 {
     int x, y;
-    color point_color;
-};
-struct Piece
+    enum color point_color;
+} Point;
+
+typedef struct Piece
 {
-    Point positions[4];
-};
+    struct Point positions[4];
+} Piece;
+
 #endif // PIECE_H

@@ -1,7 +1,7 @@
 #include "../classes/config.h"
 #include "../classes/piece.h"
 #include "../classes/game.hpp"
-#include "board.cpp"
+#include "board.c"
 
 Game* createGame() {
     Game* newGame = (Game*) malloc(sizeof(Game));
@@ -20,8 +20,8 @@ Game* createGame() {
 }
 
 void clean(Game* game) {
-    delete game->board->board_rows;
-    delete game->board;
+    clean(game->board->board_rows);
+    clean(game->board);
     delete game->piece;
     delete game;
 }

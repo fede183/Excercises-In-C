@@ -177,7 +177,8 @@ int main()
 
             for (unsigned int i = 0; i < point_quantity; i++)
             {
-                draw_sprite(points[i].x, points[i].y, points[i].point_color, sprite);
+                Point point = points[i];
+                draw_sprite(point.x, point.y, point.point_color, sprite);
                 window->draw(sprite);
             }
 
