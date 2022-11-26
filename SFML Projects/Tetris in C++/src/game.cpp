@@ -1,7 +1,7 @@
-#include "../classes/config.h"
-#include "../classes/piece.h"
+#include "../classes/config.hpp"
+#include "../classes/piece.hpp"
 #include "../classes/game.hpp"
-#include "board.c"
+#include "board.cpp"
 
 Game* createGame() {
     Game* newGame = (Game*) malloc(sizeof(Game));
@@ -50,7 +50,6 @@ void descend(Game* game) {
 
 void rotate(Game* game) {
     Point center_point = game->piece->positions[1];
-    printf("center point is: (%i, %i)\n", center_point.x, center_point.y);
     for (int i = 0; i < 4; i++) {
         unsigned int rotate_x = game->piece->positions[i].y - center_point.y;
         unsigned int rotate_y = game->piece->positions[i].x - center_point.x;         

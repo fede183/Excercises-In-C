@@ -1,6 +1,5 @@
-#include "linked_list.h"
-#include "piece.h"
-#include "color.h"
+#include "piece.hpp"
+#include "color.hpp"
 
 #ifndef POINT_BOARD_H
 #define POINT_BOARD_H

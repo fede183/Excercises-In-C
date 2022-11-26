@@ -1,7 +1,7 @@
-#include "color.h"
+#include "color.hpp"
 
-#ifndef PIECE_H
-#define PIECE_H
+#ifndef PIECE_HPP
+#define PIECE_HPP
 typedef struct Point
 {
     int x, y;
@@ -13,4 +13,4 @@ typedef struct Piece
     struct Point positions[4];
 } Piece;
 
-#endif // PIECE_H
+#endif // PIECE_HPP

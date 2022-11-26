@@ -2,10 +2,10 @@
 #include <iostream>
 #include <stdbool.h>  
 
-#include "../classes/board.h"
-#include "../classes/point_board.h"
-#include "linked_list.c"
-#include "piece.c"
+#include "../classes/board.hpp"
+#include "../classes/point_board.hpp"
+#include "linked_list.cpp"
+#include "piece.cpp"
 
 bool equal(const PointForBoard& point1, const PointForBoard& point2)
 {
@@ -15,7 +15,7 @@ bool equal(const PointForBoard& point1, const PointForBoard& point2)
 Board* createBoard(const unsigned int board_row_size, const unsigned int board_column_size) {
     Board* newBoard = (Board*) malloc(sizeof(Board));
 
-    newBoard->board_rows = createList(sizeof(LinkedList));
+    newBoard->board_rows = createList<LinkedList<PointForBoard>*>();
     newBoard->board_row_size = board_row_size;
     newBoard->board_column_size = board_column_size;
 
@@ -30,11 +30,11 @@ void clean(Board* board) {
 PointForBoard** get_columns(Board* board)
 {
     unsigned int size = board->board_rows->size;
-    if (size > 0) {
+       if (size > 0) {
         PointForBoard** columns = (PointForBoard**) malloc(sizeof(PointForBoard*) * size);
-        LinkedList** rows = (LinkedList**) get_all_values(board->board_rows);
+        LinkedList<PointForBoard>** rows = get_all_values(board->board_rows);
         for (unsigned int i = 0; i < size; i++) {
-            PointForBoard* column = (PointForBoard*) get_all_values(rows[i]);
+            PointForBoard* column = get_all_values(rows[i]);
             columns[i] = column;
         }
         
@@ -50,23 +50,24 @@ void add_point(Board* board, Point point) {
     
     unsigned int size = board->board_rows->size;
     unsigned int real_y = board->board_row_size - 1 - y;
+
     if (real_y >= size) {
         unsigned int iterator_size = 1 + real_y - size;
         while (iterator_size > 0) {
             iterator_size--;
-            LinkedList* new_row = createList(sizeof(LinkedList));
+            LinkedList<PointForBoard>* new_row = createList<PointForBoard>();
 
-            push((LinkedList*) board->board_rows, (void*) new_row);
+            push(board->board_rows, new_row);
         }
     } 
 
-    PointForBoard* pointForBoard = (PointForBoard*) malloc(sizeof(PointForBoard));
-    pointForBoard->x = x;
-    pointForBoard->point_color = point.point_color; 
+    PointForBoard pointForBoard;
+    pointForBoard.x = x;
+    pointForBoard.point_color = point.point_color; 
 
-    LinkedList* elements = (LinkedList*) get_value(board->board_rows, real_y);
+    LinkedList<PointForBoard>* elements = get_value(board->board_rows, real_y);
     
-    push(elements, (void*) pointForBoard);
+    push(elements, pointForBoard);
 }
 
 void add_piece(Board* board, Piece* piece) {
@@ -75,8 +76,8 @@ void add_piece(Board* board, Piece* piece) {
     }
 }
 
-static bool compare_(void* elem1, void* elem2) {
-    return ((PointForBoard*) elem1)->x == ((PointForBoard*) elem2)->x;
+static bool compare_(PointForBoard elem1, PointForBoard elem2) {
+    return elem1.x == elem2.x;
 }
 
 bool has_point(Board* board, Point point) {
@@ -89,12 +90,12 @@ bool has_point(Board* board, Point point) {
         return false;
     }
 
-    PointForBoard* pointForBoard = (PointForBoard*) malloc(sizeof(PointForBoard));
-    pointForBoard->x = x;
+    PointForBoard pointForBoard;
+    pointForBoard.x = x;
 
-    LinkedList* elements = (LinkedList*) get_value(board->board_rows, real_y);
+    LinkedList<PointForBoard>* elements = get_value(board->board_rows, real_y);
 
-    return has_value(elements, (void*) pointForBoard, compare_);
+    return has_value(elements, pointForBoard, compare_);
 }
 
 bool has_colitions_bottom_or_remains(Board* board, Piece* piece) {
@@ -138,7 +139,7 @@ bool has_colitions_border_or_remains(Board* board, Piece* piece) {
 
 unsigned int delete_complete_lines(Board* board) {
     unsigned int size = board->board_rows->size;
-    LinkedList** rows = (LinkedList**) get_all_values(board->board_rows);
+    LinkedList<PointForBoard>** rows = get_all_values(board->board_rows);
     unsigned int quantity_lines_delete = 0;
     unsigned int i = 0, j = 0;
     while (i < size)
@@ -158,5 +159,5 @@ unsigned int get_row_quantity(Board* board) {
 }
 
 unsigned int get_column_quantity(Board* board, const unsigned int index) {
-    return ((LinkedList*) get_value(board->board_rows, index))->size;
+    return get_value(board->board_rows, index)->size;
 }
