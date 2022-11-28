@@ -5,3 +5,4 @@ calculator_rust/target/*
 calculator_gui_rust/target/*
 simple_web_page_rust/target/*
 SFML Projects/Sorting Visual in C++/main
+.DS_Store
