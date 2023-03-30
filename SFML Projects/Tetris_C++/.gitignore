@@ -4,3 +4,4 @@ classes/*.o
 classes/*.out
 src/*.o
 src/*.out
+build/

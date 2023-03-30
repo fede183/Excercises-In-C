@@ -79,11 +79,11 @@ void draw_sprite(const unsigned int x, const unsigned int y, color point_color, 
 
 int main()
 {
-    if (!texturePoint.loadFromFile("images/tiles.png"))
-        throw("Texture load error");
+    // if (!texturePoint.loadFromFile("images/tiles.png"))
+    //     throw("Texture load error");
 
-    if (!font.loadFromFile("fonts/textFont.ttf"))
-        throw("Error al cargar la fuente");
+    // if (!font.loadFromFile("fonts/textFont.ttf"))
+    //     throw("Error al cargar la fuente");
 
     //if (!music.openFromFile("sounds/theme.wav"))
     //    throw("Error al cargar la música");
